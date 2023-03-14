@@ -1,8 +1,0 @@
-{
-	"name": "alexhalo3115.dungeonforge.Runtime",
-	"references": [
-  ],
-  "includePlatforms": [
-    "Editor"
-  ]
-}
