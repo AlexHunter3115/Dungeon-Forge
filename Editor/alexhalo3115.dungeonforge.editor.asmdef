@@ -1,0 +1,10 @@
+
+{
+	"name": "alexhalo3115.dungeonforge.editor",
+	"references": [
+    "alexhalo3115.dungeonforge.runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}
