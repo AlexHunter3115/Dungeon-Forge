@@ -5,12 +5,10 @@ using UnityEngine.UIElements;
 
 namespace DS.Elements 
 {
-
     public class DSInfoNodeNode : DSNode
     {
         public override void Initialize(Vector2 pos, DSGraphView graphView)
         {
-
             base.Initialize(pos, graphView);
 
             dialogueType = DSDialogueType.InfoNode;
@@ -23,7 +21,6 @@ namespace DS.Elements
             Label dialogueTextArea = new Label("\n Rule Legend");
 
             titleContainer.Insert(0, dialogueTextArea);
-
 
             Label ExplanationTextArea = new Label("\n Welcome to the Wave Function Collapse (WFC) ruleBuilder" +
                 "\n\n Enter the folder name (in repsect to the Resources folder) where all the models that will be used for the generation are" +

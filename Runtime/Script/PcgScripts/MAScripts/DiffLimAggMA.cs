@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 
 namespace DungeonForge.AlgoScript
 {
-
     public class DiffLimAggMA : MonoBehaviour
     {
-
         [HideInInspector]
         public PCGManager pcgManager;
 
@@ -22,6 +17,5 @@ namespace DungeonForge.AlgoScript
         {
             pcgManager = this.transform.GetComponent<PCGManager>();
         }
-
     }
 }

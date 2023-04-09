@@ -1,29 +1,22 @@
 using DS.Enumerations;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace DS.Elements 
 {
-
     using DS.Utilities;
     using DS.Windows;
 
     public class DSMultiChoiceNode : DSNode
     {
-
-
         public override void Initialize(Vector2 pos, DSGraphView graphView)
         {
             base.Initialize(pos, graphView);
 
             titleString = "\n Main Rule";
             dialogueType = DSDialogueType.MultiChoice;
-
         }
-
 
         public override void Draw()
         {
@@ -42,11 +35,7 @@ namespace DS.Elements
                 titleString = allowed == true ? $"{titleString}" : $"<color=red>{titleString}</color>";
             }) ;   //indexVal = evt.newValue
 
-
-
-
             mainContainer.Insert(1,textFieldIndexRule);
-
 
             Port LeftPort = this.CreatePort("Left Side", Orientation.Horizontal, Direction.Input,Port.Capacity.Multi);
             inputContainer.Add(LeftPort);
@@ -62,9 +51,5 @@ namespace DS.Elements
 
             RefreshExpandedState();
         }
-
-
-       
     }
-
 }

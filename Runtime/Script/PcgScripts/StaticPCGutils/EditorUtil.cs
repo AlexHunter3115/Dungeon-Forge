@@ -7,14 +7,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEngine;
 
-
-
 namespace DungeonForge.Utils
 {
-
     public static class DFEditorUtil
     {
-
         public static void SpacesUILayout(int spaceNum)
         {
             for (int i = 0; i < spaceNum; i++)
@@ -153,8 +149,8 @@ namespace DungeonForge.Utils
         public static void GenerateCorridorsEditorSection(PCGManager pcgManager, List<List<DFTile>> rooms, ref bool allowedForward,ref bool allowedBack,
             ref int corridorThickness,ref int selGridConnectionType, ref int selGridPathGenType,
             ref bool useWeights, ref int bezierOndulation, ref bool pathType,
-            ref int randomAddCorr,ref int deadEndAmount, ref int deadEndCorridorThickness, ref int deadEndOndulation
-            ,ref List<Edge> edges) 
+            ref int randomAddCorr,ref int deadEndAmount, ref int deadEndCorridorThickness, ref int deadEndOndulation, 
+            ref List<Edge> edges) 
         {
 
             if (rooms.Count == 1)
@@ -623,54 +619,16 @@ namespace DungeonForge.Utils
             }
         }
 
-        public static void SaveGridDataToGenerate(PCGManager pcgManager, string inSaveMapFileName, out string saveMapFileName)
+        public static void SaveGridDataToGenerateEditorSection(PCGManager pcgManager, string inSaveMapFileName, out string saveMapFileName)
         {
             saveMapFileName = EditorGUILayout.TextField("Save file name: ", inSaveMapFileName);
             if (GUILayout.Button("save"))
             {
-                SaveMap(pcgManager.gridArr, inSaveMapFileName);
+                DFAlgoBank.SaveTileArrayData(pcgManager.gridArr, inSaveMapFileName);
             }
             SpacesUILayout(2);
 
             GUILayout.Label("Once saved you can access this data later on.\nTo Generate your dungeon switch to the Generate component (in the main algo selection) and give this file name");
-        }
-
-        public static void SaveMap(DFTile[,] grid, string saveFileName)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream stream = new MemoryStream();
-
-            // Create a new array to store the data
-            SerializableTile[,] serializableMap = new SerializableTile[grid.GetLength(0), grid.GetLength(1)];
-            for (int i = 0; i < grid.GetLength(1); i++)
-            {
-                for (int j = 0; j < grid.GetLength(0); j++)
-                {
-                    serializableMap[j, i] = new SerializableTile(grid[j, i].position, grid[j, i].tileWeight, grid[j, i].cost, (int)grid[j, i].tileType);
-                }
-            }
-
-            formatter.Serialize(stream, serializableMap);
-
-            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-            {
-                AssetDatabase.CreateFolder("Assets", "Resources");
-                AssetDatabase.Refresh();
-            }
-
-            if (!AssetDatabase.IsValidFolder("Assets/Resources/Resources_Algorithms"))
-            {
-                AssetDatabase.CreateFolder("Assets/Resources", "Resources_Algorithms");
-                AssetDatabase.Refresh();
-            }
-
-            if (!AssetDatabase.IsValidFolder("Assets/Resources/Resources_Algorithms/Saved_Gen_Data"))
-            {
-                AssetDatabase.CreateFolder("Assets/Resources/Resources_Algorithms", "Saved_Gen_Data");
-                AssetDatabase.Refresh();
-            }
-
-            File.WriteAllBytes(Application.dataPath + "/Resources/Resources_Algorithms/Saved_Gen_Data/" + saveFileName, stream.ToArray());
         }
 
 
@@ -698,6 +656,5 @@ namespace DungeonForge.Utils
         public static GUIContent[] selStringsGenType = { new GUIContent() { text = "Vertice Generation", tooltip = "Using the algorithm marching cubes create a mesh object which can be exported to other 3D softwares" }, new GUIContent() { text = "TileSet Generation", tooltip = "Generate the Dungeon using the tileset provided" } };
 
         public static GUIContent[] selStringPathGenType = { new GUIContent() { text = "A* pathfinding", tooltip = "Weights are available for this algortihm, remember to create the ruleSet" }, new GUIContent() { text = "Dijistra", tooltip = "" }, new GUIContent() { text = "Beizier Curve", tooltip = "Create curved corridors" } };
-
     }
 }

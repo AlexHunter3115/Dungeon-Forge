@@ -27,7 +27,6 @@ namespace DungeonForge.AlgoScript
         public string tileSetFileName = "";
     }
 
-
     [Serializable]
     public class WFCTileRule
     {
@@ -40,7 +39,6 @@ namespace DungeonForge.AlgoScript
         public List<int> allowedObjAbove = new List<int>();
         public List<int> allowedObjBelow = new List<int>();
     }
-
 
     [Serializable]
     public class TextColToObj

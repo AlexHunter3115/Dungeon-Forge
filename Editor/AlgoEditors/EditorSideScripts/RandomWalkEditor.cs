@@ -1,5 +1,3 @@
-
-
 namespace DungeonForge.Editor
 {
     using System.Collections.Generic;
@@ -139,7 +137,7 @@ namespace DungeonForge.Editor
                     {
                         mainScript.allowedBack = true;
 
-                        DFEditorUtil.SaveGridDataToGenerate(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
+                        DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
                     }
 
                     break;

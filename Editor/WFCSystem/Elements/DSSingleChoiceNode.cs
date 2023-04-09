@@ -1,17 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-
-
 
 namespace DS.Elements 
 {
     using DS.Utilities;
     using DS.Windows;
     using Enumerations;
-    using System;
-    using UnityEditor;
     using UnityEditor.Experimental.GraphView;
     using UnityEngine.UIElements;
 

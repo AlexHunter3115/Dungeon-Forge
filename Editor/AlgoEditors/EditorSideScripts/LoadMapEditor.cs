@@ -1,14 +1,9 @@
-
-
 namespace DungeonForge.Editor
 {
     using UnityEditor;
     using UnityEngine;
     using DungeonForge.Utils;
     using DungeonForge.AlgoScript;
-    using static DungeonForge.AlgoScript.PCGManager;
-    using System.Collections.Generic;
-    using Codice.CM.WorkspaceServer.DataStore.Configuration;
 
     [CustomEditor(typeof(LoadMapMA))]
     public class LoadMapEditor : Editor
@@ -106,7 +101,7 @@ namespace DungeonForge.Editor
                             if (mainScript.singleStringSelected)
                             {
                                 succesfullLoading = false;
-                                var map = mainScript.LoadDataCall(mainScript.fileName);
+                                var map = DFAlgoBank.LoadTileArrayData(mainScript.fileName);
 
                                 if (map == null) { }
                                 else
@@ -134,7 +129,7 @@ namespace DungeonForge.Editor
 
                                 for (int i = 0; i < mainScript.stringList.Count; i++)
                                 {
-                                    var map = mainScript.LoadDataCall(mainScript.stringList[i]);
+                                    var map = DFAlgoBank.LoadTileArrayData(mainScript.fileName);
 
                                     if (map == null)
                                     {
@@ -161,7 +156,7 @@ namespace DungeonForge.Editor
 
                                     for (int i = 0; i < mainScript.stringList.Count; i++)
                                     {
-                                        var map = mainScript.LoadDataCall(mainScript.stringList[i]);
+                                        var map = DFAlgoBank.LoadTileArrayData(mainScript.fileName);
 
                                         mainScript.AddOnGridData(map, overWriteFloor);
                                     }

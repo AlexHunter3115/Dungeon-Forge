@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Random = UnityEngine.Random;
-
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor;
 
 namespace DungeonForge.Utils
 {
@@ -357,7 +362,6 @@ namespace DungeonForge.Utils
 
                         int[] node_position = { currNode.refToBasicTile.position.x + x_buff, currNode.refToBasicTile.position.y + y_buff };
 
-
                         if (node_position[0] < 0 || node_position[1] < 0 || node_position[0] >= tileArray2D.GetLength(0) || node_position[1] >= tileArray2D.GetLength(1))
                         {
                             continue;
@@ -423,7 +427,6 @@ namespace DungeonForge.Utils
             }
 
             return null;
-
         }
 
         #endregion
@@ -503,7 +506,6 @@ namespace DungeonForge.Utils
                 {
                     currCord.x = gridArr.GetLength(0) - 1;
                 }
-
 
                 if ((int)MathF.Round(currCord.z) < 0)
                 {
@@ -734,15 +736,12 @@ namespace DungeonForge.Utils
 
         public static DFTile[,] CompartimentalisedRandomWalk(BoundsInt boundsRoom)
         {
-
             int maxY = boundsRoom.zMax - boundsRoom.zMin;
             int maxX = boundsRoom.xMax - boundsRoom.xMin;
 
             int iterations = (maxX) * (maxY);
 
-
             int iterationsLeft = iterations;
-
 
             DFTile[,] gridArr = new DFTile[maxX, maxY];
 
@@ -755,13 +754,10 @@ namespace DungeonForge.Utils
                 }
             }
 
-
             Vector2Int currentHead = new Vector2Int(maxX / 2, maxY / 2);
 
             while (iterationsLeft > 0)
             {
-
-
                 int ranDir = Random.Range(0, 4);
 
                 switch (ranDir)
@@ -835,8 +831,6 @@ namespace DungeonForge.Utils
         /// <param name="threashold">If this value is bigger than 0 than anything belowe will have a set weight of 0 and anything above will have a set weight of 1</param>
         public static void PerlinNoise(DFTile[,] gridArr, float scale, int octaves, float persistance, float lacu, int offsetX, int offsetY, float threashold = 0)
         {
-            float[,] noiseMap = new float[gridArr.GetLength(0), gridArr.GetLength(1)];
-
             if (scale <= 0)
             {
                 scale = 0.0001f;
@@ -845,7 +839,7 @@ namespace DungeonForge.Utils
             float maxN = float.MinValue;
             float minN = float.MaxValue;
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -853,7 +847,6 @@ namespace DungeonForge.Utils
                     float amplitude = 1;
                     float freq = 1;
                     float noiseHeight = 0;
-
 
                     for (int i = 0; i < octaves; i++)
                     {
@@ -868,21 +861,12 @@ namespace DungeonForge.Utils
                         amplitude *= persistance;
 
                         freq *= lacu;
-
                     }
 
                     if (noiseHeight > maxN) { maxN = noiseHeight; }
                     else if (noiseHeight < minN) { minN = noiseHeight; }
 
-                    noiseMap[x, y] = noiseHeight;
-                }
-            }
-
-            for (int y = 0; y < gridArr.GetLength(1); y++)
-            {
-                for (int x = 0; x < gridArr.GetLength(0); x++)
-                {
-                    gridArr[x, y].tileWeight = Mathf.InverseLerp(minN, maxN, noiseMap[x, y]);
+                    gridArr[x, y].tileWeight = Mathf.InverseLerp(minN, maxN, noiseHeight);
                     if (threashold != 0)
                     {
                         if (threashold < gridArr[x, y].tileWeight)
@@ -891,9 +875,8 @@ namespace DungeonForge.Utils
                             gridArr[x, y].tileWeight = 0;
                     }
                 }
-            }
+            });
         }
-
 
         #region Manipulation of perlin noise
 
@@ -1021,7 +1004,6 @@ namespace DungeonForge.Utils
 
         #endregion
 
-
         private static Vector2 MoveVector(Vector2 vector, float direction, float turnMulti)
         {
             float dx = Mathf.Cos(direction * 2 * Mathf.PI) * turnMulti;
@@ -1114,7 +1096,7 @@ namespace DungeonForge.Utils
 
             while (visitedVertices.Count != points.Count)
             {
-                HashSet<Edge> edgesWithPoint = new HashSet<Edge>();
+                List<Edge> edgesWithPoint = new List<Edge>();
 
                 foreach (var trig in triangulation)
                 {
@@ -1156,7 +1138,7 @@ namespace DungeonForge.Utils
         /// <returns>Returns a touple containing   item1 = Triangles list   ---  item2 = All edges list</returns>
         public static Tuple<List<Triangle>, List<Edge>> DelaunayTriangulation(List<Vector2> points)
         {
-            if (points.Count< 3) 
+            if (points.Count < 4) 
             {
                 Debug.Log($"The given points in the list for triangulation are not enough, need to have at least 3 points and i was given {points.Count}");
                 return null;
@@ -1398,13 +1380,13 @@ namespace DungeonForge.Utils
 
         private static void ResetVisited(DFTile[,] gridArr)
         {
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
                     gridArr[x, y].visited = false;
                 }
-            }
+            });
         }
 
 
@@ -1591,11 +1573,9 @@ namespace DungeonForge.Utils
         /// <param name="percentageOfSpawn">Each points percenatge of being populated</param>
         /// <param name="weight">The weight set of the populated tile</param>
         /// <returns></returns>
-        public static List<DFTile> SpawnRandomPointsOnTheGrid(DFTile[,] gridArr, float percentageOfSpawn,float weight = 1)
+        public static void SpawnRandomPointsOnTheGrid(DFTile[,] gridArr, float percentageOfSpawn = 0.5f, float weight = 1)
         {
-            List<DFTile> points = new List<DFTile>();
-
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -1606,12 +1586,9 @@ namespace DungeonForge.Utils
                     else
                     {
                         gridArr[x, y].tileWeight = weight;
-                        points.Add(gridArr[x, y]);
                     }
                 }
-            }
-
-            return points;
+            });
         }
 
         /// <summary>
@@ -1632,7 +1609,7 @@ namespace DungeonForge.Utils
                 }
             }
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -1642,18 +1619,8 @@ namespace DungeonForge.Utils
                     {
                         for (int row_offset = -1; row_offset < 2; row_offset++)
                         {
-
-                            if (y + col_offset < 0 || x + row_offset < 0 || y + col_offset >= gridArr.GetLength(1) - 1 || x + row_offset >= gridArr.GetLength(0) - 1)
+                            if (!(y + col_offset < 0 || x + row_offset < 0 || y + col_offset >= gridArr.GetLength(1) - 1 || x + row_offset >= gridArr.GetLength(0) - 1) && !(col_offset == 0 && row_offset == 0))
                             {
-
-                            }
-                            else if (col_offset == 0 && row_offset == 0)
-                            {
-
-                            }
-                            else
-                            {
-                                // this was !
                                 if (copyArrayStorage[x + row_offset, y + col_offset] == 1)
                                 {
                                     neighbours++;
@@ -1671,7 +1638,8 @@ namespace DungeonForge.Utils
                         gridArr[x, y].tileWeight = 0;
                     }
                 }
-            }
+            });
+
         }
 
         /// <summary>
@@ -1691,7 +1659,7 @@ namespace DungeonForge.Utils
                 }
             }
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -1702,15 +1670,7 @@ namespace DungeonForge.Utils
                         {
                             for (int row_offset = -1; row_offset < 2; row_offset++)
                             {
-                                if (y + col_offset < 0 || x + row_offset < 0 || y + col_offset >= gridArr.GetLength(1) - 1 || x + row_offset >= gridArr.GetLength(0) - 1)
-                                {
-
-                                }
-                                else if (col_offset == 0 && row_offset == 0)
-                                {
-
-                                }
-                                else
+                                if (!(y + col_offset < 0 || x + row_offset < 0 || y + col_offset >= gridArr.GetLength(1) - 1 || x + row_offset >= gridArr.GetLength(0) - 1) && !(col_offset == 0 && row_offset == 0))
                                 {
                                     if (copyArrayStorage[x + row_offset, y + col_offset] == 1)
                                     {
@@ -1729,9 +1689,8 @@ namespace DungeonForge.Utils
                             gridArr[x, y].tileWeight = 0;
                         }
                     }
-
                 }
-            }
+            });
         }
 
         #endregion
@@ -2118,7 +2077,6 @@ namespace DungeonForge.Utils
 
             while (chunkSize > 1)
             {
-
                 int halfChunk = chunkSize / 2;
 
                 for (int y = 0; y < mapSize - 1; y = y + chunkSize)
@@ -2167,13 +2125,15 @@ namespace DungeonForge.Utils
         /// <param name="DistanceCalculationType">True for Euclidean Distance, False for Manhattan Distance</param>
         public static void Voronoi2D(DFTile[,] gridArr, int numOfPoints, bool DistanceCalculationType)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             List<Color> colors = new List<Color>();
             for (int i = 0; i < numOfPoints; i++)
             {
                 Color newColor = new Color(Random.value, Random.value, Random.value);
                 colors.Add(newColor);
             }
-
 
             var pointsArr = new List<Vector2>();
 
@@ -2197,7 +2157,8 @@ namespace DungeonForge.Utils
                 }
             }
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -2233,9 +2194,17 @@ namespace DungeonForge.Utils
                     gridArr[x, y].idx = closestIndex;
                     gridArr[x, y].color = colors[closestIndex];
                 }
-            }
+            });
+
 
             GetBoundariesVoronoi(gridArr);
+
+
+            stopwatch.Stop();
+            long elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+
+            Console.WriteLine($"Elapsed time for Voronoi Calculation: {elapsedMilliseconds} ms, using normal loop");
+
         }
 
         /// <summary>
@@ -2246,7 +2215,7 @@ namespace DungeonForge.Utils
         {
             var childPosArry = DFGeneralUtil.childPosArry4Side;
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -2288,7 +2257,7 @@ namespace DungeonForge.Utils
                         DFGeneralUtil.ResetTile(gridArr[x, y]);
                     }
                 }
-            }
+            });
         }
 
         #endregion
@@ -2521,7 +2490,7 @@ namespace DungeonForge.Utils
 
             var copyArr = new DFTile[gridArr.GetLength(0), gridArr.GetLength(1)];
 
-            for (int y = 0; y < copyArr.GetLength(1); y++)
+            Parallel.For(0, copyArr.GetLength(1), y =>
             {
                 for (int x = 0; x < copyArr.GetLength(0); x++)
                 {
@@ -2529,9 +2498,9 @@ namespace DungeonForge.Utils
                     copyArr[x, y].tileType = gridArr[x, y].tileType;
                     copyArr[x, y].tileWeight = gridArr[x, y].tileWeight;
                 }
-            }
+            });
 
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, copyArr.GetLength(1), y =>
             {
                 for (int x = 0; x < copyArr.GetLength(0); x++)
                 {
@@ -2563,7 +2532,7 @@ namespace DungeonForge.Utils
                         }
                     }
                 }
-            }
+            });
         }
 
         public static void SetUpTileTypesCorridor(DFTile[,] gridArr)
@@ -2574,7 +2543,7 @@ namespace DungeonForge.Utils
 
             var copyArr = new DFTile[gridArr.GetLength(0), gridArr.GetLength(1)];
 
-            for (int y = 0; y < copyArr.GetLength(1); y++)
+            Parallel.For(0, copyArr.GetLength(1), y =>
             {
                 for (int x = 0; x < copyArr.GetLength(0); x++)
                 {
@@ -2582,12 +2551,16 @@ namespace DungeonForge.Utils
                     copyArr[x, y].tileType = gridArr[x, y].tileType;
                     copyArr[x, y].tileWeight = gridArr[x, y].tileWeight;
                 }
-            }
+            });
 
-            for (int y = 0; y < copyArr.GetLength(1); y++)
+            Parallel.For(0, copyArr.GetLength(1), y =>
             {
                 for (int x = 0; x < copyArr.GetLength(0); x++)
                 {
+                    copyArr[x, y] = new DFTile();
+                    copyArr[x, y].tileType = gridArr[x, y].tileType;
+                    copyArr[x, y].tileWeight = gridArr[x, y].tileWeight;
+
                     if (copyArr[x, y].tileType == DFTile.TileType.FLOORCORRIDOR)
                     {
 
@@ -2610,7 +2583,7 @@ namespace DungeonForge.Utils
                         }
                     }
                 }
-            }
+            });
         }
 
         public static void SetUpCorridorWithPath(List<DFTile> path, float customWeight = 0.75f)
@@ -2622,6 +2595,86 @@ namespace DungeonForge.Utils
 
                 tile.tileWeight = customWeight;
             }
+        }
+
+        public static void SaveTileArrayData(DFTile[,] grid, string saveFileName)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            MemoryStream stream = new MemoryStream();
+
+            // Create a new array to store the data
+            SerializableTile[,] serializableMap = new SerializableTile[grid.GetLength(0), grid.GetLength(1)];
+            for (int i = 0; i < grid.GetLength(1); i++)
+            {
+                for (int j = 0; j < grid.GetLength(0); j++)
+                {
+                    serializableMap[j, i] = new SerializableTile(grid[j, i].position, grid[j, i].tileWeight, grid[j, i].cost, (int)grid[j, i].tileType);
+                }
+            }
+
+            formatter.Serialize(stream, serializableMap);
+
+            if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+            {
+                AssetDatabase.CreateFolder("Assets", "Resources");
+                AssetDatabase.Refresh();
+            }
+
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/Resources_Algorithms"))
+            {
+                AssetDatabase.CreateFolder("Assets/Resources", "Resources_Algorithms");
+                AssetDatabase.Refresh();
+            }
+
+            if (!AssetDatabase.IsValidFolder("Assets/Resources/Resources_Algorithms/Saved_Gen_Data"))
+            {
+                AssetDatabase.CreateFolder("Assets/Resources/Resources_Algorithms", "Saved_Gen_Data");
+                AssetDatabase.Refresh();
+            }
+
+            File.WriteAllBytes(Application.dataPath + "/Resources/Resources_Algorithms/Saved_Gen_Data/" + saveFileName, stream.ToArray());
+        }
+
+        public static DFTile[,] LoadTileArrayData(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                EditorUtility.DisplayDialog("Error", "The file name given is not valie", "OK");
+                return null;
+            }
+
+            string filePath = Application.dataPath + "/Resources/Resources_Algorithms/Saved_Gen_Data/" + fileName;
+
+            if (File.Exists(filePath))
+            {
+                byte[] data = File.ReadAllBytes(filePath);
+                BinaryFormatter formatter = new BinaryFormatter();
+                MemoryStream stream = new MemoryStream(data);
+                SerializableTile[,] serializableMap = (SerializableTile[,])formatter.Deserialize(stream);
+
+                DFTile[,] map = new DFTile[serializableMap.GetLength(0), serializableMap.GetLength(1)];
+
+                Parallel.For(0, serializableMap.GetLength(1), i =>
+                {
+                    for (int j = 0; j < serializableMap.GetLength(0); j++)
+                    {
+                        map[j, i] = new DFTile(serializableMap[j, i].position, serializableMap[j, i].tileWeight, serializableMap[j, i].cost, serializableMap[j, i].tileType);
+
+                        if (map[j, i].tileType == DFTile.TileType.WALLCORRIDOR)
+                            map[j, i].tileType = DFTile.TileType.WALL;
+
+                        if (map[j, i].tileType == DFTile.TileType.FLOORCORRIDOR)
+                            map[j, i].tileType = DFTile.TileType.FLOORROOM;
+                    }
+                });
+
+                return map;
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", "The file name given is not valie", "OK");
+            }
+            return null;
         }
 
         #endregion
@@ -2719,7 +2772,6 @@ namespace DungeonForge.Utils
 
             length = Mathf.Abs(Vector3.Distance(a, b));
         }
-
     }
 
     #endregion

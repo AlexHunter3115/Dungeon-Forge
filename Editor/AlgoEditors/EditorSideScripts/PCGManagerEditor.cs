@@ -1,6 +1,3 @@
-
-
-
 namespace DungeonForge.Editor
 {
     using UnityEditor;

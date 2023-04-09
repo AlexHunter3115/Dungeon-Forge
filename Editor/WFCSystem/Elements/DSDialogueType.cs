@@ -1,10 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
-
-
 namespace DS.Enumerations
 {
     public enum DSDialogueType
@@ -14,6 +7,5 @@ namespace DS.Enumerations
         InfoNode,
         QuickRule
     }
-
 }
 

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace DungeonForge.AlgoScript
 {
@@ -46,6 +44,5 @@ namespace DungeonForge.AlgoScript
             pcgManager = this.transform.GetComponent<PCGManager>();
             pcgManager.UndoInteraction = this;
         }
-
     }
 }

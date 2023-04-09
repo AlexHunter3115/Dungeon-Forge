@@ -492,7 +492,7 @@ namespace DungeonForge.Editor
                 case RanRoomGenMA.UI_STATE.GENERATE:
                     {
 
-                        DFEditorUtil.SaveGridDataToGenerate(mainScript.PcgManager, saveMapFileName, out saveMapFileName);
+                        DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.PcgManager, saveMapFileName, out saveMapFileName);
                     }
                     break;
                 default:

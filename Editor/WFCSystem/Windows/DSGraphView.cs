@@ -7,22 +7,14 @@ using UnityEngine.UIElements;
 
 namespace DS.Windows
 {
-
     using DS.Enumerations;
     using DS.Utilities;
     using System;
     using System.IO;
     using System.Linq;
-    using UnityEditor.VersionControl;
-    using static System.Runtime.CompilerServices.RuntimeHelpers;
 
     public class DSGraphView : GraphView
     {
-
-        //need to add checks for whne the val is incorrect
-        // add a text under the sub rule node to say which one is sleected
-       
-
 
         private DSSearchWindow searchWindow;
 
@@ -53,31 +45,33 @@ namespace DS.Windows
 
         void OnKeyDown(KeyDownEvent ev)
         {
+            Vector2 mousePosition = Event.current.mousePosition;
+
+            // Convert the mouse position to graph space
+            Vector2 graphMousePosition = GetLocalMousePos(mousePosition);
+
 
             switch (ev.keyCode)
             {
-               
                 case KeyCode.A:
-                    var ruleNodeA = (DSMultiChoiceNode)CreateNode(DSDialogueType.MultiChoice, Vector2.zero);
-                    this.AddElement(ruleNodeA);
+                    var ruleNodeA = (DSMultiChoiceNode)CreateNode(DSDialogueType.MultiChoice, graphMousePosition);
+                    AddElement(ruleNodeA);
 
                     break;
                 
                 case KeyCode.D:
-                    var ruleNodeD = (DSSingleChoiceNode)CreateNode(DSDialogueType.SingleChoice, Vector2.zero);
-                    this.AddElement(ruleNodeD);
+                    var ruleNodeD = (DSSingleChoiceNode)CreateNode(DSDialogueType.SingleChoice, graphMousePosition);
+                    AddElement(ruleNodeD);
                     break;
                
                 case KeyCode.S:
-                    var ruleNodeS = (DSQuickRuleNode)CreateNode(DSDialogueType.QuickRule, Vector2.zero);
-                    this.AddElement(ruleNodeS);
+                    var ruleNodeS = (DSQuickRuleNode)CreateNode(DSDialogueType.QuickRule, graphMousePosition);
+                    AddElement(ruleNodeS);
                     break;
                 
                 default:
                     break;
             }
-
-
         }
 
         private void AddMiniMap()
@@ -90,7 +84,6 @@ namespace DS.Windows
             miniMap.SetPosition(new Rect(15, 50, 200, 200));
 
             this.Add(miniMap);
-
         }
         private void AddSearchWindow()
         {
@@ -103,8 +96,8 @@ namespace DS.Windows
             }
 
             nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
-
         }
+
         private void AddManipulators()
         {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
@@ -139,7 +132,6 @@ namespace DS.Windows
 
         public void RefreshRules(string fileName)
         {
-
             ruleDict.Clear();
 
             var nodes = this.nodes.ToList();
@@ -157,22 +149,15 @@ namespace DS.Windows
                 }
             }
 
-
             if (respawn)
             {
                 ruleNode = (DSInfoNodeNode)CreateNode(DSDialogueType.InfoNode, Vector2.zero);
                 this.AddElement(ruleNode);
             }
 
-
-
-
-
             if (fileName == null) { return; }
 
-
             List<string> fileNames = new List<string>();
-
 
             fileName = "Assets/Resources/" + fileName;
 
@@ -186,7 +171,6 @@ namespace DS.Windows
                     continue;
                 }
 
-
                 int index = file.Name.IndexOf(".");
                 var manipString = file.Name.Substring(0, index);
 
@@ -195,15 +179,12 @@ namespace DS.Windows
                 fileNames.Add(manipString);
 
                 ruleDict.Add(fileNames.Count - 1, manipString);
-
             }
 
             AddRuleNode(fileNames);
         }
         private void AddRuleNode(List<string> TileSetNames)
         {
-
-
             ruleNode.inputContainer.Clear();
             ruleNode.outputContainer.Clear();
 
@@ -215,10 +196,8 @@ namespace DS.Windows
 
             ruleNode.RefreshExpandedState();
 
-
             for (int i = 0; i < TileSetNames.Count; i++)
             {
-
                 Label tileName = new Label() { text = TileSetNames[i] };
                 Label tileIndex = new Label() { text = "    " + i.ToString() };
 
@@ -230,14 +209,11 @@ namespace DS.Windows
         }
 
 
-
         private IManipulator CreateGroupContextualMenu()
         {
             ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator(
                 menuEvent => menuEvent.menu.AppendAction("Add group", actionEvent => AddElement(CreateGroup("Dialouge group", GetLocalMousePos(actionEvent.eventInfo.localMousePosition))))
                 );
-
-
 
             return contextualMenuManipulator;
         }
@@ -276,7 +252,6 @@ namespace DS.Windows
         }
         public DSNode CreateNode(DSDialogueType type, Vector2 pos, string indexVal, string Guid)
         {
-
             Type nodeType = Type.GetType($"DS.Elements.DS{type}Node");
 
             DSNode node = (DSNode)Activator.CreateInstance(nodeType);
@@ -287,12 +262,10 @@ namespace DS.Windows
 
             node.Draw();
 
-
             return node;
         }
         public DSNode CreateQuickNode(DSDialogueType type, Vector2 pos, string indexVal, string Guid, bool above, bool below, bool left, bool right)
         {
-
             Type nodeType = Type.GetType($"DS.Elements.DS{type}Node");
 
             DSQuickRuleNode node = (DSQuickRuleNode)Activator.CreateInstance(nodeType);
@@ -304,11 +277,8 @@ namespace DS.Windows
             node.isOpenBelowBool = below;
             node.isOpenLeftBool = left;
             node.isOpenRightBool = right;
-            
-            
-
+          
             node.Draw();
-
 
             return node;
         }
@@ -319,7 +289,6 @@ namespace DS.Windows
 
             ports.ForEach(port =>
             {
-
                 if (startPort == port) { return; }
 
                 if (startPort.node == port.node) { return; }
@@ -340,7 +309,6 @@ namespace DS.Windows
                 worldMousePos -= editorWindow.position.position;
             }
 
-
             Vector2 localMousePos = contentViewContainer.WorldToLocal(worldMousePos);
 
             return localMousePos;
@@ -354,8 +322,6 @@ namespace DS.Windows
 
             if (graphViewCont == null) { return; }
 
-
-
             ClearGraph();
             GenNodes();
             GenQuickNodes();
@@ -363,14 +329,10 @@ namespace DS.Windows
             var arr = nodes.ToList().Cast<DSNode>().ToList();
             ConnectNodes(arr);
 
-
-
             RefreshRules(editorWindow._fileNameResources);
-
         }
         private void ClearGraph()
         {
-
             foreach (var edge in edges)
             {
                 this.RemoveElement(edge);
@@ -383,7 +345,6 @@ namespace DS.Windows
         }
         private void GenNodes()
         {
-
             var list = new List<DSNode>();
 
             foreach (var node in graphViewCont.nodeData)
@@ -392,12 +353,9 @@ namespace DS.Windows
                 list.Add(createdNode);
                 this.AddElement(createdNode);
             }
-
         }
         private void ConnectNodes(List<DSNode> arr)
         {
-
-
             var nodeConnections = graphViewCont.nodeLinkData;
 
             foreach (var nodeCon in nodeConnections)
@@ -418,51 +376,34 @@ namespace DS.Windows
                     }
                 }
 
-
-
                 int idx = DSElementUtility.GetPortIdx(nodeCon.PortName);
 
-
                 var tempEdge = new UnityEditor.Experimental.GraphView.Edge { output = (Port)outputNode.outputContainer[0], input = (Port)inputNode.inputContainer[idx] };
-
 
                 tempEdge?.input.Connect(tempEdge);
                 tempEdge?.output.Connect(tempEdge);
 
                 this.Add(tempEdge);
-
             }
-
-
         }
 
         private void GenQuickNodes()
         {
             foreach (var quickNode in graphViewCont.quickNodeData)
             {
-
                 var createdNode = CreateQuickNode(quickNode.dialogueType, quickNode.position, quickNode.IndexTile, quickNode.nodeGuid, 
                     quickNode.IsOpenAbove, quickNode.IsOpenBelow, quickNode.IsOpenLeft, quickNode.IsOpenRight);
 
                 this.AddElement(createdNode);
-
             }
         }
-
-
 
         public void SaveGraph(string filename)
         {
             var edges = this.edges.ToList();
             var nodes = this.nodes.ToList();
 
-
-            //if (!edges.Any()) return;
-
-
-
             var GVcont = ScriptableObject.CreateInstance<GraphViewDataCont>();
-
 
             var connectedPorts = edges.Where(x => x.input.node != null).ToArray();
 
@@ -489,7 +430,6 @@ namespace DS.Windows
                     break;
                 }
 
-
                 if (iterNode.dialogueType == DSDialogueType.QuickRule)
                 {
 
@@ -511,16 +451,12 @@ namespace DS.Windows
                 {
                     GVcont.nodeData.Add(new NodeData() { position = iterNode.GetPosition().position, nodeGuid = iterNode.nodeGuid, dialogueType = iterNode.dialogueType, IndexTile = iterNode.indexVal });
                 }
-
             }
-
 
             if (save == false)
             {
                 return;
             }
-
-
 
             if (!AssetDatabase.IsValidFolder("Assets/Resources"))
             {
@@ -544,7 +480,6 @@ namespace DS.Windows
             AssetDatabase.SaveAssets();
 
         }
-
     }
 
 }

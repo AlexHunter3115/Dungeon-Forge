@@ -6,13 +6,15 @@
   "unity": "2022.1",
   "unityRelease": "0b5",
   "keywords": [
-    "keyword1",
-    "keyword2",
-    "keyword3"
+    "PCG",
+    "Dungeon Generation"
   ],
+  "dependencies": {
+    "com.unity.formats.fbx": "latest"
+  },
   "author": {
-    "name": "My Company",
+    "name": "Alexhalo3115",
     "email": "hello@example.com",
-    "url": "https://www.mycompany.com"
+    "url": "https://alessandrobufalino3115.github.io/"
   }
 }

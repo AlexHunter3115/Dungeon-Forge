@@ -1,25 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
-
-
-
 
 namespace DS.Elements 
 {
-
     using DS.Enumerations;
-    using DS.Utilities;
     using DS.Windows;
     using UnityEditor;
 
     public class DSNode : Node
     {
-        //public string DialogueName { get; set; }
-        // public List<string> Choices { get; set; }
-        // public string Text { get; set; }
 
         public bool allowed = true;
         public DSDialogueType dialogueType { get; set; }
@@ -37,16 +26,10 @@ namespace DS.Elements
             SetPosition(new Rect(pos, Vector2.zero));
             RefreshPorts();
             RefreshExpandedState();
-
         }
-
 
         public virtual void Draw() 
-        {
-
-
-        }
-
+        { }
 
         public string CheckExists(string newVal)
         {
@@ -76,16 +59,13 @@ namespace DS.Elements
             //else
             //    titleString = $"{titleString}";
 
-
             return newVal;
-
         }
 
         private void UpdateMainCoint() 
         {
             
         }
-
 
     }
 }

@@ -3,15 +3,11 @@
 namespace DungeonForge.AlgoScript
 {
     using System.Collections.Generic;
-    using System.IO;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using UnityEditor;
     using UnityEngine;
 
-    using Random = UnityEngine.Random;
     using DungeonForge.Utils;
-    using System;
     using static DungeonForge.AlgoScript.PCGManager;
+    using System.Threading.Tasks;
 
     public class LoadMapMA : MonoBehaviour
     {
@@ -73,55 +69,13 @@ namespace DungeonForge.AlgoScript
         }
 
 
-        public DFTile[,] LoadDataCall(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                EditorUtility.DisplayDialog("Error", "The file name given is not valie", "OK");
-                return null;
-            }
-
-            string filePath = Application.dataPath + "/Resources/Resources_Algorithms/Saved_Gen_Data/" + fileName;
-
-            if (File.Exists(filePath))
-            {
-                byte[] data = File.ReadAllBytes(filePath);
-                BinaryFormatter formatter = new BinaryFormatter();
-                MemoryStream stream = new MemoryStream(data);
-                SerializableTile[,] serializableMap = (SerializableTile[,])formatter.Deserialize(stream);
-
-                DFTile[,] map = new DFTile[serializableMap.GetLength(0), serializableMap.GetLength(1)];
-                for (int i = 0; i < serializableMap.GetLength(1); i++)
-                {
-                    for (int j = 0; j < serializableMap.GetLength(0); j++)
-                    {
-                        map[j, i] = new DFTile(serializableMap[j, i].position, serializableMap[j, i].tileWeight, serializableMap[j, i].cost, serializableMap[j, i].tileType);
-
-                        if (map[j, i].tileType == DFTile.TileType.WALLCORRIDOR)
-                            map[j, i].tileType = DFTile.TileType.WALL;
-
-                        if (map[j, i].tileType == DFTile.TileType.FLOORCORRIDOR)
-                            map[j, i].tileType = DFTile.TileType.FLOORROOM;
-                    }
-                }
-
-                return map;
-            }
-            else
-            {
-                EditorUtility.DisplayDialog("Error", "The file name given is not valie", "OK");
-            }
-            return null;
-        }
-
         public void AddOnGridData(DFTile[,] gridToAddOn, bool wallDominance) 
         {
-
-            for (int y = 0; y < pcgManager.gridArr.GetLength(1); y++)
+            Parallel.For(0, pcgManager.gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < pcgManager.gridArr.GetLength(0); x++)
                 {
-                    if (x >= gridToAddOn.GetLength(0) || y >= gridToAddOn.GetLength(1)) 
+                    if (x >= gridToAddOn.GetLength(0) || y >= gridToAddOn.GetLength(1))
                     {
                         continue;
                     }
@@ -130,7 +84,7 @@ namespace DungeonForge.AlgoScript
                     {
                         case DFTile.TileType.VOID:
                             {
-                                
+
                                 break;
                             }
 
@@ -140,9 +94,9 @@ namespace DungeonForge.AlgoScript
                                 {
                                     pcgManager.gridArr[x, y] = new DFTile(gridToAddOn[x, y]);
                                 }
-                                else 
+                                else
                                 {
-                                    if (pcgManager.gridArr[x,y].tileType == DFTile.TileType.VOID) 
+                                    if (pcgManager.gridArr[x, y].tileType == DFTile.TileType.VOID)
                                     {
                                         pcgManager.gridArr[x, y] = new DFTile(gridToAddOn[x, y]);
                                     }
@@ -179,7 +133,7 @@ namespace DungeonForge.AlgoScript
                                 }
                                 else
                                 {
-                                    if (pcgManager.gridArr[x, y].tileType == DFTile.TileType.VOID )
+                                    if (pcgManager.gridArr[x, y].tileType == DFTile.TileType.VOID)
                                     {
                                         pcgManager.gridArr[x, y] = new DFTile(gridToAddOn[x, y]);
                                     }
@@ -210,11 +164,8 @@ namespace DungeonForge.AlgoScript
                         default:
                             break;
                     }
-
-
                 }
-            }
-
+            });
         }
         
         private void OnDrawGizmos()

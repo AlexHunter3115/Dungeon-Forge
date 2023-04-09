@@ -43,7 +43,6 @@ namespace DungeonForge.Editor
             base.OnInspectorGUI();
             CellularAutomataMA mainScript = (CellularAutomataMA)target;
 
-
             #region explanation
 
             showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
@@ -63,10 +62,7 @@ namespace DungeonForge.Editor
 
             #endregion
 
-
             DFEditorUtil.SpacesUILayout(4);
-
-
 
             switch (mainScript.state)
             {
@@ -137,7 +133,7 @@ namespace DungeonForge.Editor
                     mainScript.allowedBack = false;
                     mainScript.allowedForward = false;
 
-                    DFEditorUtil.SaveGridDataToGenerate(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
+                    DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
 
 
 

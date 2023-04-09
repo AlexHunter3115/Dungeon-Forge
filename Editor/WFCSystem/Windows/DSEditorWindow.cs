@@ -1,32 +1,21 @@
 using DS.Utilities;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
-
-
 
 namespace DS.Windows 
 {
     public class DSEditorWindow : EditorWindow
     {
-
-
         private string _fileName = "WFCFile";
         public string _fileNameResources = "";
         private DSGraphView _graphView;
-
-
-
 
         [MenuItem("PCG Algorithms/WFC RuleBuilder", priority = 12)]
         public static void ShowExample()
         {
             DSEditorWindow wnd = GetWindow<DSEditorWindow>("WFC RuleBuilder");
         }
-
-
-
 
         private void CreateGUI()
         {
@@ -44,17 +33,12 @@ namespace DS.Windows
 
         private void AddGraphView() 
         {
-
             _graphView = new DSGraphView(this);
 
             _graphView.StretchToParentSize();
 
             rootVisualElement.Add(_graphView);
-            
         }
-
-
-
 
         private void AddToolbar()
         {
@@ -65,7 +49,6 @@ namespace DS.Windows
             var textFieldFileName = DSElementUtility.CreateTextField(_fileName);
             textFieldFileName.MarkDirtyRepaint();
             textFieldFileName.RegisterValueChangedCallback(evt => _fileName = evt.newValue);
-
 
             var textFieldResourcesName = DSElementUtility.CreateTextField(_fileNameResources);
             textFieldResourcesName.MarkDirtyRepaint();
@@ -84,18 +67,13 @@ namespace DS.Windows
             toolbar.Add(textFieldResourcesName);
             toolbar.Add(refreshRules);
 
-
-            Label rulesGV = new Label() { text = " Use the SpaceBar  --  Mouse  -- A S D   to spawn the Nodes" };
-
+            Label rulesGV = new Label() { text = " Use the SpaceBar  --  A S D  to spawn the Nodes" };
 
             toolbar.Add(rulesGV);
 
             rootVisualElement.Add(toolbar);
-
         }
-
     }
-
 }
 
 

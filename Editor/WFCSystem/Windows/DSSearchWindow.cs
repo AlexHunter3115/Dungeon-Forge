@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
-
-
 
 namespace DS.Windows
 {
@@ -18,8 +14,7 @@ namespace DS.Windows
         private Texture2D indentationText;
         public void Initilize(DSGraphView dsGraphView) 
         {
-         _graphView = dsGraphView;
-
+            _graphView = dsGraphView;
 
             indentationText = new Texture2D(1, 1);
             indentationText.SetPixel(0, 0, Color.clear);
@@ -31,7 +26,7 @@ namespace DS.Windows
         {
             List<SearchTreeEntry> searchTreeEntries = new List<SearchTreeEntry>()
            {
-               new SearchTreeGroupEntry(new GUIContent("create element")),
+               new SearchTreeGroupEntry(new GUIContent("Create element")),
                new SearchTreeGroupEntry(new GUIContent("Rule Node Types"),1),
                new SearchTreeEntry(new GUIContent("Sub Tile Rule Node",indentationText))
                {
@@ -50,24 +45,7 @@ namespace DS.Windows
                 userData = DSDialogueType.QuickRule
                },
 
-
-               //new SearchTreeGroupEntry(new GUIContent("dialogue group"),1),
-               //new SearchTreeEntry(new GUIContent("Single group", indentationText))
-               //{
-               // level = 2,
-               // userData = DSDialogueType.SingleChoice
-               //},
-
-               //new SearchTreeEntry(new GUIContent("multi group", indentationText))
-               //{
-               // level = 2,
-               // userData = DSDialogueType.MultiChoice
-               //},
-
            };
-
-
-
 
             return searchTreeEntries;
         }

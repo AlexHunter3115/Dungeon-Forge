@@ -1,4 +1,3 @@
-
 namespace DungeonForge.Editor
 {
     using System.Collections.Generic;
@@ -569,7 +568,7 @@ namespace DungeonForge.Editor
                     break;
                 case PerlinWormsMA.UI_STATE.GENERATE:
 
-                    DFEditorUtil.SaveGridDataToGenerate(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
+                    DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
                     break;
                 default:
                     break;

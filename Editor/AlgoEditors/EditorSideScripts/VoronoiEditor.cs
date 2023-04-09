@@ -331,7 +331,7 @@ namespace DungeonForge.Editor
                     {
                         mainScript.allowedBack = false;
 
-                        DFEditorUtil.SaveGridDataToGenerate(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
+                        DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
                         break;
                     }
 

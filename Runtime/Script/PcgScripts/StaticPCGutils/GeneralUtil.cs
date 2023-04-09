@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 namespace DungeonForge.Utils
 {
     using DungeonForge.AlgoScript;
+    using System.Threading.Tasks;
 
     public static class DFGeneralUtil
     {
@@ -148,7 +149,7 @@ namespace DungeonForge.Utils
         /// <param name="gridArr"></param>
         public static void RestartGrid(DFTile[,] gridArr)
         {
-            for (int y = 0; y < gridArr.GetLength(1); y++)
+            Parallel.For(0, gridArr.GetLength(1), y =>
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -156,7 +157,7 @@ namespace DungeonForge.Utils
                     gridArr[x, y].position = new Vector2Int(x, y);
                     gridArr[x, y].color = Color.white;
                 }
-            }
+            });
         }
 
         /// <summary>

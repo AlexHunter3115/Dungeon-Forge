@@ -6,11 +6,8 @@ using UnityEngine.UIElements;
 
 namespace DS.Elements
 {
-
     public class DSQuickRuleNode : DSNode
     {
-
-
         public bool isOpenLeftBool;
         public bool isOpenRightBool;
         public bool isOpenAboveBool;

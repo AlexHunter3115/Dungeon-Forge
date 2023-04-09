@@ -1,4 +1,3 @@
-
 namespace DungeonForge.Utils
 {
     public interface IUndoInteraction

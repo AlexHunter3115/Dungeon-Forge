@@ -12,5 +12,4 @@ public class WeightRuleSet : ScriptableObject
     public float ROOF = 0;
     public float FLOORCORRIDOR = 0;
     public float AVOID = 0;
-
 }

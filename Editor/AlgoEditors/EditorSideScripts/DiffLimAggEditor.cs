@@ -194,7 +194,7 @@ namespace DungeonForge.Editor
 
                 DFEditorUtil.SpacesUILayout(2);
 
-                DFEditorUtil.SaveGridDataToGenerate(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
+                DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
             }
         }
     }

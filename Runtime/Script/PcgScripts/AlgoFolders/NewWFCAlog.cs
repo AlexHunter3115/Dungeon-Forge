@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace DungeonForge.AlgoScript
 {
-
     public class NewWFCAlog : MonoBehaviour
     {
-
         [SerializeField]
         public WFCTile[,] arrayOfWFCTiles = new WFCTile[0, 0];
         private int xSize = 20;

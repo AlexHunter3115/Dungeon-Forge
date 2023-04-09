@@ -56,7 +56,6 @@ namespace DungeonForge.AlgoScript
 
 
 
-
         [HideInInspector]
         public DFEditorUtil.PathFindingType pathFindingType;
 

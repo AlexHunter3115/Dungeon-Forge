@@ -1,11 +1,8 @@
-
 namespace DungeonForge.Editor
 {
     using UnityEditor;
     using UnityEngine;
     using DungeonForge.AlgoScript;
-
-
     public class RuleSpawnerEditor : Editor
     {
 

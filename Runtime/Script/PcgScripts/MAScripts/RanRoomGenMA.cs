@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 
 namespace DungeonForge.AlgoScript
@@ -16,7 +14,6 @@ namespace DungeonForge.AlgoScript
             get { return pcgManager; }
         }
 
-
         private int maxWidth;
         public int MaxWidth
         {
@@ -24,14 +21,12 @@ namespace DungeonForge.AlgoScript
             set { maxWidth = value; }
         }
 
-
         private int minWidth;
         public int MinWidth
         {
             get { return minWidth; }
             set { minWidth = value; }
         }
-
 
         private int maxHeight;
         public int MaxHeight
@@ -48,7 +43,6 @@ namespace DungeonForge.AlgoScript
             set { minHeight = value; }
         }
 
-
         private int numOfRoom;
         public int NumOfRoom
         {
@@ -56,14 +50,12 @@ namespace DungeonForge.AlgoScript
             set { numOfRoom = value; }
         }
 
-
         private bool BPS;
         public bool BPSg
         {
             get { return BPS; }
             set { BPS = value; }
         }
-
 
         private bool started;
         public bool Started
@@ -463,8 +455,6 @@ namespace DungeonForge.AlgoScript
                 {
                     gridArrRoom = DFAlgoBank.CompartimentalisedRandomWalk(room);
                 }
-
-
 
                 for (int y = 0; y < gridArrRoom.GetLength(1); y++)
                 {

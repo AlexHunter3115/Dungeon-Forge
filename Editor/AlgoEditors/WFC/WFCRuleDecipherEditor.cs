@@ -1,4 +1,3 @@
-
 namespace DungeonForge.Editor
 {
     using DungeonForge.Utils;
@@ -11,12 +10,9 @@ namespace DungeonForge.Editor
     [CustomEditor(typeof(WFCRuleDecipher))]
     public class WFCRuleDecipherEditor : Editor
     {
-
         bool showRules;
 
         private const int MAX_TEXTURE_SIZE = 64;
-
-
 
         public override void OnInspectorGUI()
         {
