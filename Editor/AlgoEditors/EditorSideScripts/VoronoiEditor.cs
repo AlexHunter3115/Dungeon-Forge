@@ -24,7 +24,6 @@ namespace DungeonForge.Editor
         int corridorThickness = 3;
         int randomAddCorr = 0;
         int deadEndAmount = 0;
-        int deadEndCorridorThickness = 3;
 
         int width = 10;
         int height = 10;
@@ -51,8 +50,8 @@ namespace DungeonForge.Editor
             showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Descirption");
 
             if (showRules)
-            {  //Calculates the distance between points in a space and uses it to partition the space into regions based on the closest point. It achieves efficient spatial analysis
-                GUILayout.TextArea("You have choosen Voronoi algorithm as a starting algorithm.\nCalculates the distance between points in a space and uses it to partition the space into regions based on the closest point. It achieves efficient spatial analysis\n\nFor more information visit the Wiki!!");
+            {  
+                GUILayout.TextArea("The Voronoi algorithm generates dungeons by dividing the space into regions based on proximity to a set of points, called seeds. The result is a series of interconnected cells, which can be used to create a dungeon with a natural, irregular appearance. This algorithm is well-suited for creating caves or organic-looking dungeon layouts.\n\nFor more information visit the Wiki: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#1-voronoi");
             }
 
             if (!Selection.activeTransform)
@@ -66,7 +65,6 @@ namespace DungeonForge.Editor
 
 
             #endregion
-
 
             switch (mainScript.currUiState)
             {
@@ -285,14 +283,12 @@ namespace DungeonForge.Editor
                                         break;
                                 }
 
-
                                 foreach (var edge in mainScript.edges)
                                 {
                                     var tileA = roomDict[edge.edge[0]][Random.Range(0, roomDict[edge.edge[0]].Count)].position;
                                     var tileB = roomDict[edge.edge[1]][Random.Range(0, roomDict[edge.edge[1]].Count)].position;
                                     DFAlgoBank.BezierCurvePathing(new Vector2Int(tileA.x, tileA.y), new Vector2Int(tileB.x, tileB.y), 5, mainScript.pcgManager.gridArr);
                                 }
-
 
                                 DFAlgoBank.SetUpTileCorridorTypesUI(mainScript.pcgManager.gridArr, corridorThickness);
 
@@ -320,7 +316,7 @@ namespace DungeonForge.Editor
                             mainScript.allowedBack = true;
 
                             DFEditorUtil.GenerateCorridorsEditorSection(mainScript.pcgManager, mainScript.rooms, ref mainScript.allowedForward, ref mainScript.allowedBack, ref corridorThickness
-                            , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndCorridorThickness, ref deadEndOndulation, ref mainScript.edges);
+                            , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndOndulation, ref mainScript.edges);
                         }
 
                         #endregion

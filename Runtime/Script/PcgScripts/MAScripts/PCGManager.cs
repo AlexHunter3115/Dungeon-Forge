@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-
 namespace DungeonForge.AlgoScript
 {
     using DungeonForge.Utils;
@@ -51,7 +50,7 @@ namespace DungeonForge.AlgoScript
             ROOM_GEN = 2,
             CELLULAR_AUTOMATA = 3,
             L_SYSTEM = 4,
-            DELUNAY = 5,
+            DELAUNAY = 5,
             WAVE_FUNCTION_COLLAPSE = 6,
             PERLIN_NOISE = 7,
             PERLIN_WORM = 8,
@@ -74,7 +73,6 @@ namespace DungeonForge.AlgoScript
         [SerializeField]
         public List<TileRuleSetPCG> WallsTiles = new List<TileRuleSetPCG>();
 
-
         [Space(40)]
         [Header("This is where entities go for the chunk system")]
         public List<Transform> player = new List<Transform>();
@@ -82,15 +80,12 @@ namespace DungeonForge.AlgoScript
         [Range(1, 3)]
         public int loadingRange = 1;
 
-      
-
         private int chunkWidth = 10;
         public int ChunkWidth
         {
             get { return chunkWidth; }
             set { chunkWidth = value; }
         }
-
 
         private int chunkHeight = 10;
         public int ChunkHeight
@@ -125,10 +120,10 @@ namespace DungeonForge.AlgoScript
         [HideInInspector]
         public string TileSetRuleFileName = "";
 
-
         [HideInInspector]
         public List<Transform> chunkObjs = new List<Transform>();
 
+        private Transform parentObj;
 
         private void Update()
         {
@@ -194,11 +189,10 @@ namespace DungeonForge.AlgoScript
         public void CreatePlane()
         {
             DeletePlane();
-
             plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
 
             plane.transform.position = Vector3.zero;
-            plane.transform.parent = this.transform;
+            plane.name = "Canvas Generation";
 
             plane.transform.localScale = new Vector3(width/10f, 1, height/10f);
 
@@ -231,6 +225,7 @@ namespace DungeonForge.AlgoScript
             currMainAlgoIDX = (int)mainAlgorithm;
             undoInteraction = null;
 
+            parentObj = this.transform;
             switch (mainAlgorithm)
             {
                 case MainAlgo.VORONI:
@@ -263,7 +258,7 @@ namespace DungeonForge.AlgoScript
                         comp.InspectorAwake();
                     }
                     break;
-                case MainAlgo.DELUNAY:
+                case MainAlgo.DELAUNAY:
                     {
                         var comp = gameObject.AddComponent<DelunaryMA>();
                         comp.InspectorAwake();
@@ -460,9 +455,10 @@ namespace DungeonForge.AlgoScript
         public void FormObject(Mesh mesh)
         {
             GameObject newPart = new GameObject();
-            newPart.transform.position = this.transform.position;
-            newPart.transform.rotation = this.transform.rotation;
-            newPart.transform.localScale = this.transform.localScale;
+            newPart.transform.position = parentObj.position;
+            newPart.transform.rotation = parentObj.rotation;
+            newPart.transform.localScale = parentObj.localScale;
+            newPart.transform.parent = parentObj;
 
             var filter = newPart.AddComponent<MeshFilter>();
             filter.mesh = mesh;
@@ -553,7 +549,7 @@ namespace DungeonForge.AlgoScript
             {
                 var objRef = new GameObject();
                 chunkObjs.Add(objRef.transform);
-                objRef.transform.parent = this.transform;
+                objRef.transform.parent = parentObj;
                 objRef.transform.name = i.ToString();
                 objRef.isStatic = true;
                 chunks[i].mainParent = objRef;
@@ -594,8 +590,8 @@ namespace DungeonForge.AlgoScript
                         {
                             if (gridArr[x, y].tileType != DFTile.TileType.VOID)
                             {
-                                var objRef = Instantiate(FloorTiles.Count > 1 ? FloorTiles[RatioBasedChoice(FloorTiles)].objectPrefab : FloorTiles[0].objectPrefab, this.transform);
-                                this.transform.GetChild(0);
+                                var objRef = Instantiate(FloorTiles.Count > 1 ? FloorTiles[RatioBasedChoice(FloorTiles)].objectPrefab : FloorTiles[0].objectPrefab, parentObj);
+                                parentObj.GetChild(0);
 
                                 objRef.transform.parent = chunkObjs[gridArr[x, y].idx].transform;
                                 objRef.isStatic = true;
@@ -603,13 +599,13 @@ namespace DungeonForge.AlgoScript
                             }
                         }
 
-                        if (gridArr[x, y].tileType == DFTile.TileType.WALL  || gridArr[x, y].tileType == DFTile.TileType.WALLCORRIDOR)
+                        if (gridArr[x, y].tileType == DFTile.TileType.WALL || gridArr[x, y].tileType == DFTile.TileType.WALLCORRIDOR)
                         {
                             var checkVector = new Vector2Int(x + 1, y);// right check
 
                             if (checkVector.x < 0 || checkVector.y < 0 || checkVector.x >= gridArr.GetLength(0) || checkVector.y >= gridArr.GetLength(1))
                             {
-                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                 objRef.transform.position = new Vector3(x, z, y);
                                 objRef.transform.Rotate(0, 90, 0);
@@ -620,7 +616,7 @@ namespace DungeonForge.AlgoScript
                             {
                                 if (gridArr[checkVector.x, checkVector.y].tileType == DFTile.TileType.VOID)
                                 {
-                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                     objRef.transform.position = new Vector3(x, z, y);
                                     objRef.transform.Rotate(0, 90, 0);
@@ -635,7 +631,7 @@ namespace DungeonForge.AlgoScript
 
                             if (checkVector.x < 0 || checkVector.y < 0 || checkVector.x >= gridArr.GetLength(0) || checkVector.y >= gridArr.GetLength(1))
                             {
-                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                 objRef.transform.position = new Vector3(x, z, y);
                                 objRef.transform.Rotate(0, 270, 0);
@@ -646,7 +642,7 @@ namespace DungeonForge.AlgoScript
                             {
                                 if (gridArr[checkVector.x, checkVector.y].tileType == DFTile.TileType.VOID)
                                 {
-                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                     objRef.transform.position = new Vector3(x, z, y);
                                     objRef.transform.Rotate(0, 270, 0);
@@ -660,7 +656,7 @@ namespace DungeonForge.AlgoScript
 
                             if (checkVector.x < 0 || checkVector.y < 0 || checkVector.x >= gridArr.GetLength(0) || checkVector.y >= gridArr.GetLength(1))
                             {
-                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                 objRef.transform.position = new Vector3(x, z, y);
                                 objRef.isStatic = true;
@@ -671,7 +667,7 @@ namespace DungeonForge.AlgoScript
                             {
                                 if (gridArr[checkVector.x, checkVector.y].tileType == DFTile.TileType.VOID)
                                 {
-                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                     objRef.transform.position = new Vector3(x, z, y);
                                     objRef.transform.Rotate(0, 0, 0);
@@ -684,7 +680,7 @@ namespace DungeonForge.AlgoScript
 
                             if (checkVector.x < 0 || checkVector.y < 0 || checkVector.x >= gridArr.GetLength(0) || checkVector.y >= gridArr.GetLength(1))
                             {
-                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                 objRef.transform.position = new Vector3(x, z, y);
                                 objRef.transform.Rotate(0, 180, 0);
@@ -695,7 +691,7 @@ namespace DungeonForge.AlgoScript
                             {
                                 if (gridArr[checkVector.x, checkVector.y].tileType == DFTile.TileType.VOID)
                                 {
-                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                    var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                     objRef.transform.position = new Vector3(x, z, y);
                                     objRef.transform.Rotate(0, 180, 0);
@@ -722,15 +718,16 @@ namespace DungeonForge.AlgoScript
             for (int z = 0; z < RoomHeight; z++)  // this is the heihgt of the room
             {
                 for (int y = 0; y < gridArr.GetLength(0); y++)
+                //Parallel.For(0, gridArr.GetLength(1), y =>
                 {
-                    for (int x = 0; x < gridArr.GetLength(1); x++)
+                    for (int x = 0; x < gridArr.GetLength(0); x++)
                     {
                         if (z == 0) //we draw everything as this is the ceiling and the floor       THIS IS WHERE THE CEILING SHOULD BE
                         {
                             if (gridArr[x, y].tileType != DFTile.TileType.VOID)
                             {
-                                var objRef = Instantiate(FloorTiles.Count > 1 ? FloorTiles[RatioBasedChoice(FloorTiles)].objectPrefab : FloorTiles[0].objectPrefab, this.transform);
-                                this.transform.GetChild(0);
+                                var objRef = Instantiate(FloorTiles.Count > 1 ? FloorTiles[RatioBasedChoice(FloorTiles)].objectPrefab : FloorTiles[0].objectPrefab, parentObj);
+                                parentObj.GetChild(0);
 
                                 objRef.transform.parent = chunkObjs[gridArr[x, y].idx].transform;
                                 objRef.isStatic = true;
@@ -741,8 +738,8 @@ namespace DungeonForge.AlgoScript
                         {
                             if (gridArr[x, y].tileType != DFTile.TileType.VOID)
                             {
-                                var objRef = Instantiate(CeilingTiles.Count > 1 ? FloorTiles[RatioBasedChoice(CeilingTiles)].objectPrefab : CeilingTiles[0].objectPrefab, this.transform);
-                                this.transform.GetChild(0);
+                                var objRef = Instantiate(CeilingTiles.Count > 1 ? FloorTiles[RatioBasedChoice(CeilingTiles)].objectPrefab : CeilingTiles[0].objectPrefab, parentObj);
+                                parentObj.GetChild(0);
 
                                 objRef.transform.parent = chunkObjs[gridArr[x, y].idx].transform;
                                 objRef.isStatic = true;
@@ -753,7 +750,7 @@ namespace DungeonForge.AlgoScript
                         {
                             if (gridArr[x, y].tileType == DFTile.TileType.WALL || gridArr[x, y].tileType == DFTile.TileType.WALLCORRIDOR)
                             {
-                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, this.transform);
+                                var objRef = Instantiate(WallsTiles.Count > 1 ? WallsTiles[RatioBasedChoice(WallsTiles)].objectPrefab : WallsTiles[0].objectPrefab, parentObj);
 
                                 objRef.transform.position = new Vector3(x, z, y);
                                 objRef.isStatic = true;
@@ -780,7 +777,9 @@ namespace DungeonForge.AlgoScript
         [Serializable]
         public class TileRuleSetPCG
         {
+            [Tooltip("Occurange is the ratio at which this object will spawn in respect to other objects if they are present")]
             public int occurance = 1;
+            [Tooltip("Object to spawn")]
             public GameObject objectPrefab;
         }
 

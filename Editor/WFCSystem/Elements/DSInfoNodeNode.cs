@@ -36,8 +36,5 @@ namespace DS.Elements
             RefreshExpandedState();
         }
     }
-
-
-
 }
 

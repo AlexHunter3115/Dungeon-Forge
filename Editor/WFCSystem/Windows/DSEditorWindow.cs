@@ -1,15 +1,16 @@
-using DS.Utilities;
-using UnityEditor;
-using UnityEditor.UIElements;
-using UnityEngine.UIElements;
-
 namespace DS.Windows 
 {
+    using DS.Utilities;
+    using UnityEditor;
+    using UnityEditor.UIElements;
+    using UnityEngine.UIElements;
+
     public class DSEditorWindow : EditorWindow
     {
         private string _fileName = "WFCFile";
-        public string _fileNameResources = "";
         private DSGraphView _graphView;
+
+        public string fileNameResources = "";
 
         [MenuItem("PCG Algorithms/WFC RuleBuilder", priority = 12)]
         public static void ShowExample()
@@ -50,14 +51,14 @@ namespace DS.Windows
             textFieldFileName.MarkDirtyRepaint();
             textFieldFileName.RegisterValueChangedCallback(evt => _fileName = evt.newValue);
 
-            var textFieldResourcesName = DSElementUtility.CreateTextField(_fileNameResources);
+            var textFieldResourcesName = DSElementUtility.CreateTextField(fileNameResources);
             textFieldResourcesName.MarkDirtyRepaint();
-            textFieldResourcesName.RegisterValueChangedCallback(evt => _fileNameResources = evt.newValue);
+            textFieldResourcesName.RegisterValueChangedCallback(evt => fileNameResources = evt.newValue);
 
             var loadButton = DSElementUtility.CreateButton("Load RuleSet", () => _graphView.LoadGraph(_fileName));
             var saveButton = DSElementUtility.CreateButton("Save RuleSet", () => _graphView.SaveGraph(_fileName));
 
-            var refreshRules = DSElementUtility.CreateButton("Refresh Rules", () => _graphView.RefreshRules(_fileNameResources));
+            var refreshRules = DSElementUtility.CreateButton("Refresh Rules", () => _graphView.RefreshRules(fileNameResources));
 
             toolbar.Add(labFN);
             toolbar.Add(textFieldFileName);

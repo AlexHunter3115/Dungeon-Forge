@@ -24,7 +24,6 @@ namespace DungeonForge.Editor
         int deadEndOndulation = 20;
 
         int deadEndAmount = 0;
-        int deadEndCorridorThickness = 3;
 
         int radius = 10;
 
@@ -49,11 +48,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("Diamond Square");
+                GUILayout.TextArea("The Diamond-Square algorithm is a terrain generation algorithm that generates height maps through a recursive process. By interpreting height values as walls or floors, this algorithm can be used to create dungeons with a fractal-like appearance. It is particularly useful for generating dungeons with a more chaotic or unpredictable layout.\n\n Visit the wiki for more informations: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#5-diamond-square");
             }
 
             if (!Selection.activeTransform)
@@ -73,16 +72,16 @@ namespace DungeonForge.Editor
                     {
                         EditorGUILayout.HelpBox("To run this algorithm a specific size of a map is needed, use the slider below", MessageType.Warning);
 
-                        power = (int)EditorGUILayout.Slider(new GUIContent() { text = "Size", tooltip = "" }, power, 6, 10);
+                        power = (int)EditorGUILayout.Slider(new GUIContent() { text = "Size", tooltip = "Size of the canvas" }, power, 6, 10);
                         GUILayout.TextArea($"The current size of the new plane is will be {Mathf.Pow(2, power) + 1} by {Mathf.Pow(2, power) + 1}");
 
                         mainScript.allowedBack = false;
                         DFEditorUtil.SpacesUILayout(1);
-                        heightDSA = (int)EditorGUILayout.Slider(new GUIContent() { text = "Height", tooltip = "" }, heightDSA, 4, 16);
-                        roughnessDSA = (int)EditorGUILayout.Slider(new GUIContent() { text = "Roughness", tooltip = "" }, roughnessDSA, 1, 16);
-                        weightClamp = EditorGUILayout.Slider(new GUIContent() { text = "Threashold", tooltip = "" }, weightClamp, 0.2f, 0.8f);
+                        heightDSA = (int)EditorGUILayout.Slider(new GUIContent() { text = "Height", tooltip = "Height determines the size of the grid in the Diamond-Square Algorithm. Larger values create a more detailed terrain with higher resolution." }, heightDSA, 4, 16);
+                        roughnessDSA = (int)EditorGUILayout.Slider(new GUIContent() { text = "Roughness", tooltip = "Roughness controls the level of terrain roughness in the Diamond-Square Algorithm. Higher values result in a more rugged and irregular terrain surface." }, roughnessDSA, 1, 16);
+                        weightClamp = EditorGUILayout.Slider(new GUIContent() { text = "Threashold", tooltip = "the minimum value as a percentage of the height that will be recognised as a tile" }, weightClamp, 0.2f, 0.8f);
 
-                        if (GUILayout.Button("Generate DiamondSqaure Randomisation"))// gen something
+                        if (GUILayout.Button("Generate Diamond Square Noise"))// gen something
                         {
                             DFGeneralUtil.RestartGrid(mainScript.pcgManager.gridArr);
 
@@ -159,8 +158,7 @@ namespace DungeonForge.Editor
                     mainScript.allowedBack = true;
 
                     DFEditorUtil.GenerateCorridorsEditorSection(mainScript.pcgManager, mainScript.rooms, ref mainScript.allowedForward, ref mainScript.allowedBack, ref corridorThickness
-                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndCorridorThickness, ref deadEndOndulation, ref mainScript.edges);
-
+                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndOndulation, ref mainScript.edges);
 
                     #endregion
 

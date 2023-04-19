@@ -26,7 +26,8 @@ namespace DungeonForge.Editor
         {
             GUILayout.TextArea("Welcome to the PCG tool, Use the sliders to set the canvas from which the dungeon will rise from\n\n" +
                 "Before starting, you can load the tiles that will be used for the generation by creating a new rule and loading that rule\n\n" +
-                "Then choose the starting main algorithm which will shape your dungeon");
+                "Then choose the starting main algorithm which will shape your dungeon\n\n" +
+                "You can always visit the documentation/wiki to help you https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack");
 
 
             DFEditorUtil.SpacesUILayout(4);
@@ -250,16 +251,11 @@ namespace DungeonForge.Editor
             {
                 serializedObject.Update();
 
-                
-
                 //for (int i = 0; i < wallListGameObj.arraySize; i++)
                 //{
                 //    EditorGUILayout.PropertyField(wallListGameObj.GetArrayElementAtIndex(i));
                 //    EditorGUILayout.PropertyField(wallListOccurance.GetArrayElementAtIndex(i));
                 //}
-
-
-
 
                 DFEditorUtil.SpacesUILayout(1);
 
@@ -283,19 +279,4 @@ namespace DungeonForge.Editor
         }
     }
 
-
-
-
-    /*
-
-     https://docs.unity3d.com/ScriptReference/EditorGUILayout.Space.html
-    https://docs.unity3d.com/ScriptReference/EditorGUI.ProgressBar.html
-    https://docs.unity3d.com/ScriptReference/TooltipAttribute.html
-
-     https://docs.unity3d.com/ScriptReference/HeaderAttribute.html
-
-
-    https://docs.unity3d.com/Manual/editor-CustomEditors.html
-    https://answers.unity.com/questions/1567638/how-can-i-change-the-variables-order-in-inspector.html
-     */
 }

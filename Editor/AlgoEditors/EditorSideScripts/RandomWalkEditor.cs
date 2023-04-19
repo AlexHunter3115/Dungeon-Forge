@@ -25,7 +25,6 @@ namespace DungeonForge.Editor
         int deadEndOndulation = 20;
 
         int deadEndAmount = 0;
-        int deadEndCorridorThickness = 3;
 
         int radius = 10;
 
@@ -41,15 +40,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have choosen RandomWalk algorithm as your initial algorithm\n\nExplenation: a \"Head\" moves in a random direction at each step\n\nStep 1: Decide how many iterations the algorithm will have to generate the base map and its sub parameters." +
-                    "\n\nStep 2: To round up the rough edges you can decide to use Cellular Automata to help smooth things out." +
-                    "\n\nStep 3: It is possible small rooms that are not your what you are looking for have been geenrated, delete them using by setting up the minimum amount of tiles a room should have." +
-                    "\n\nStep 4: Depending on the amount of rooms you are able to create corridors by choosing the wanted pathFinding algorithm and the algortihm which decideds which room is connected to which." +
-                    "\n\nStep 5: Generate the algorithm using the tileSet provided or create the blank gameobject whihc can then be exported and manipulated");
+                GUILayout.TextArea("The Random Walk algorithm generates dungeons by randomly moving through the grid, carving out paths as it goes. This results in a simple, interconnected network of corridors and rooms, which can be used to create basic dungeon layouts. It is ideal for generating smaller, less complex dungeons or for use as a starting point for further refinement.\n\n Visit the wiki for more informations: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#7-random-walk");
             }
 
             if (!Selection.activeTransform)
@@ -126,7 +121,7 @@ namespace DungeonForge.Editor
                     #region corridor making region
 
                     DFEditorUtil.GenerateCorridorsEditorSection(mainScript.pcgManager, mainScript.rooms, ref mainScript.allowedForward, ref mainScript.allowedBack, ref corridorThickness
-                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndCorridorThickness, ref deadEndOndulation, ref mainScript.edges);
+                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount,  ref deadEndOndulation, ref mainScript.edges);
 
 
                     #endregion

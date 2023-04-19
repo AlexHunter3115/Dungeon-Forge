@@ -35,11 +35,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("diff lim agg");
+                GUILayout.TextArea("Differential Aggregation Algorithms generate dungeons by iteratively adding new elements to an initial seed structure based on predefined growth rules. The resulting dungeons can range from organic, cave-like environments to more structured, maze-like layouts, depending on the chosen growth rules.\n\n Visit the wiki for more informations: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#6-differential-aggregation-algorithms");
             }
 
             if (!Selection.activeTransform)

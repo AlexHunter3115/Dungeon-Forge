@@ -1,12 +1,13 @@
-using DS.Enumerations;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.UIElements;
+
 
 namespace DS.Elements 
 {
     using DS.Utilities;
     using DS.Windows;
+    using DS.Enumerations;
+    using UnityEditor.Experimental.GraphView;
+    using UnityEngine;
+    using UnityEngine.UIElements;
 
     public class DSMultiChoiceNode : DSNode
     {

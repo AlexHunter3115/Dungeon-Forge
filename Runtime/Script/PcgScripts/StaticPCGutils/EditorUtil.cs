@@ -1,9 +1,5 @@
 using DungeonForge.AlgoScript;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEngine;
 
@@ -149,10 +145,9 @@ namespace DungeonForge.Utils
         public static void GenerateCorridorsEditorSection(PCGManager pcgManager, List<List<DFTile>> rooms, ref bool allowedForward,ref bool allowedBack,
             ref int corridorThickness,ref int selGridConnectionType, ref int selGridPathGenType,
             ref bool useWeights, ref int bezierOndulation, ref bool pathType,
-            ref int randomAddCorr,ref int deadEndAmount, ref int deadEndCorridorThickness, ref int deadEndOndulation, 
+            ref int randomAddCorr,ref int deadEndAmount, ref int deadEndOndulation, 
             ref List<Edge> edges) 
         {
-
             if (rooms.Count == 1)
             {
                 allowedForward = true;
@@ -161,8 +156,6 @@ namespace DungeonForge.Utils
                 SpacesUILayout(1);
 
                 deadEndAmount = (int)EditorGUILayout.Slider(new GUIContent() { text = "Amount of dead end corridors", tooltip = "Dead end corridors start from somewhere in the dungeon and lead to nowhere" }, deadEndAmount, 0, 5);
-
-                deadEndCorridorThickness = (int)EditorGUILayout.Slider(new GUIContent() { text = "Thickness of the dead end corridor", tooltip = "How wide should the corridor be" }, deadEndCorridorThickness, 3, 6);
 
                 deadEndOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier for dead end", tooltip = "A higher multiplier is going to equal to a more extreme curver"}, deadEndOndulation, 10, 40);
 
@@ -219,13 +212,13 @@ namespace DungeonForge.Utils
                 switch (selGridPathGenType)
                 {
                     case 0:   // A* pathfinding
-                        pathType = EditorGUILayout.Toggle(new GUIContent() { text = "Use Straight corridors", tooltip = "PathFinding will prioritize the creation of straight corridors" }, pathType);
+                        pathType = EditorGUILayout.Toggle(new GUIContent() { text = "Use straight corridors", tooltip = "PathFinding will prioritize the creation of straight corridors" }, pathType);
                       
                         break;
 
                     case 2:   // beizier 
 
-                        bezierOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier", tooltip = "beizeir curve thing to change" }, bezierOndulation, 10, 40);
+                        bezierOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve multiplier", tooltip = "beizeir curve thing to change" }, bezierOndulation, 10, 40);
                         SpacesUILayout(1);
 
                         break;
@@ -236,8 +229,6 @@ namespace DungeonForge.Utils
                 SpacesUILayout(1);
 
                 deadEndAmount = (int)EditorGUILayout.Slider(new GUIContent() { text = "Amount of dead end corridors", tooltip = "Dead end corridors start from somewhere in the dungeon and lead to nowhere" }, deadEndAmount, 0, 5);
-
-                deadEndCorridorThickness = (int)EditorGUILayout.Slider(new GUIContent() { text = "Thickness of the dead end corridor", tooltip = "How wide should the corridor be" }, deadEndCorridorThickness, 3, 6);
 
                 deadEndOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier for dead end", tooltip = "A higher multiplier is going to equal to a more extreme curver" }, deadEndOndulation, 10, 40);
 
@@ -342,7 +333,7 @@ namespace DungeonForge.Utils
 
                 SpacesUILayout(3);
 
-                GUILayout.Label("Choose the algorithm to that creates the corridor");
+                GUILayout.Label("Choose the algorithm that creates the corridor");
 
                 SpacesUILayout(2);
 
@@ -356,7 +347,7 @@ namespace DungeonForge.Utils
                 {
                     case 0:   // A* pathfindind
                         pathType = EditorGUILayout.Toggle(new GUIContent() { text = "Use Straight corridors", tooltip = "PathFinding will prioritize the creation of straight corridors" }, pathType);
-                        useWeights = EditorGUILayout.Toggle(new GUIContent() { text = "Use weights", tooltip = "" }, useWeights);
+                        useWeights = EditorGUILayout.Toggle(new GUIContent() { text = "Use weights", tooltip = "The A* algorithm accepts a weight list if desired, but it needs to be setup first" }, useWeights);
                         break;
 
                     case 1:   // djistra 
@@ -364,7 +355,7 @@ namespace DungeonForge.Utils
                         break;
                     case 2:   // beizier 
 
-                        bezierOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier", tooltip = "A higher multiplier is going to equal to a a more extreme curver" }, bezierOndulation, 10, 40);
+                        bezierOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier", tooltip = "A higher multiplier is going to equal to a more extreme curver" }, bezierOndulation, 10, 40);
 
                         break;
 
@@ -406,9 +397,7 @@ namespace DungeonForge.Utils
 
                 deadEndAmount = (int)EditorGUILayout.Slider(new GUIContent() { text = "Amount of dead end corridors", tooltip = "Dead end corridors start from somewhere in the dungeon and lead to nowhere" }, deadEndAmount, 0, 5);
 
-                deadEndCorridorThickness = (int)EditorGUILayout.Slider(new GUIContent() { text = "Thickness of the dead end corridor", tooltip = "How wide should the corridor be" }, deadEndCorridorThickness, 3, 6);
-
-                deadEndOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier for dead end", tooltip = "A higher multiplier is going to equal to a a more extreme curver" }, deadEndOndulation, 10, 40);
+                deadEndOndulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Curve Multiplier for dead end", tooltip = "A higher multiplier is going to equal to a more extreme curver" }, deadEndOndulation, 10, 40);
 
                 SpacesUILayout(2);
 
@@ -471,7 +460,6 @@ namespace DungeonForge.Utils
                                             }
                                         }
 
-
                                         if (toAdd)
                                         {
                                             edges.Add(newEdge);
@@ -488,11 +476,6 @@ namespace DungeonForge.Utils
                                 {
 
                                     DFAlgoBank.ShuffleList(rooms);
-
-                                    foreach (var item in roomDict.Keys)
-                                    {
-                                        Debug.Log(item);
-                                    }
 
                                     for (int i = 0; i < centerPoints.Count; i++)
                                     {
@@ -594,7 +577,6 @@ namespace DungeonForge.Utils
 
                         pcgManager.Plane.GetComponent<Renderer>().sharedMaterial.mainTexture = DFGeneralUtil.SetUpTextBiColShade(pcgManager.gridArr, 0, 1, true);
                     }
-
                 }
 
                 EditorGUI.EndDisabledGroup();
@@ -628,9 +610,8 @@ namespace DungeonForge.Utils
             }
             SpacesUILayout(2);
 
-            GUILayout.Label("Once saved you can access this data later on.\nTo Generate your dungeon switch to the Generate component (in the main algo selection) and give this file name");
+            GUILayout.Label("Once saved you can access this data later on.\nTo Generate your dungeon switch to the Generate component (in the main algorightm selection) and give this file name");
         }
-
 
         public enum UI_STATE
         {
@@ -650,11 +631,8 @@ namespace DungeonForge.Utils
             DFS
         }
 
+        public static GUIContent[] selStringsConnectionType = { new GUIContent() { text = "Prims's algo", tooltip = "Create a singualar path that traverses the whole dungeon" }, new GUIContent() { text = "Delaunay trig", tooltip = "One rooms can have many corridors" }, new GUIContent() { text = "Random", tooltip = "Completly random allocation of corridor connections" } };
 
-        public static GUIContent[] selStringsConnectionType = { new GUIContent() { text = "Prims's algo", tooltip = "Create a singualar path that traverses the whole dungeon" }, new GUIContent() { text = "Delunary trig", tooltip = "One rooms can have many corridors" }, new GUIContent() { text = "Random", tooltip = "Completly random allocation of corridor connections" } };
-
-        public static GUIContent[] selStringsGenType = { new GUIContent() { text = "Vertice Generation", tooltip = "Using the algorithm marching cubes create a mesh object which can be exported to other 3D softwares" }, new GUIContent() { text = "TileSet Generation", tooltip = "Generate the Dungeon using the tileset provided" } };
-
-        public static GUIContent[] selStringPathGenType = { new GUIContent() { text = "A* pathfinding", tooltip = "Weights are available for this algortihm, remember to create the ruleSet" }, new GUIContent() { text = "Dijistra", tooltip = "" }, new GUIContent() { text = "Beizier Curve", tooltip = "Create curved corridors" } };
+        public static GUIContent[] selStringPathGenType = { new GUIContent() { text = "A* pathfinding", tooltip = "Weights are available for this algortihm, remember to create the ruleSet" }, new GUIContent() { text = "Dijkstra", tooltip = "" }, new GUIContent() { text = "Beizier Curve", tooltip = "Create curved corridors" } };
     }
 }

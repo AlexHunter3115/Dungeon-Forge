@@ -26,7 +26,6 @@ namespace DungeonForge.Editor
         int deadEndOndulation = 20;
 
         int deadEndAmount = 0;
-        int deadEndCorridorThickness = 3;
 
         int radius = 10;
 
@@ -45,12 +44,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have chosen CA");
-
+                GUILayout.TextArea("Cellular Automata algorithms generate dungeons based on a set of simple rules that determine the state of each cell in a grid. By using these rules to iteratively evolve the grid, the algorithm can create dungeons with a wide variety of structures and appearances. Cellular Automata is well-suited for generating cave-like environments, organic shapes, and more structured dungeon layouts, depending on the chosen rule set.\n\nVisit the wiki for more informations: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#9-cellular-automata");
             }
 
             if (!Selection.activeTransform)
@@ -70,10 +68,9 @@ namespace DungeonForge.Editor
 
                     mainScript.allowedBack = false;
 
-                    ranVal = EditorGUILayout.Slider(new GUIContent() { text = "", tooltip = "" }, ranVal, 0.3f, 0.7f);
+                    ranVal = EditorGUILayout.Slider(new GUIContent() { text = "Noise percentage", tooltip = "Chance per tile that is going to be on or off" }, ranVal, 0.3f, 0.7f);
 
-
-                    if (GUILayout.Button(new GUIContent() { text = "Start CA", tooltip = "" }))
+                    if (GUILayout.Button(new GUIContent() { text = "Generate Random Noise", tooltip = "" }))
                     {
                         DFAlgoBank.SpawnRandomPointsOnTheGrid(mainScript.pcgManager.gridArr, ranVal);
                         mainScript.pcgManager.Plane.GetComponent<Renderer>().sharedMaterial.mainTexture = DFGeneralUtil.SetUpTextBiColShade(mainScript.pcgManager.gridArr, 0, 1, true);
@@ -121,7 +118,7 @@ namespace DungeonForge.Editor
                     mainScript.allowedBack = true;
 
                     DFEditorUtil.GenerateCorridorsEditorSection(mainScript.pcgManager, mainScript.rooms, ref mainScript.allowedForward, ref mainScript.allowedBack, ref corridorThickness
-                        , ref selGridConnectionType, ref selGridPathGenType,ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndCorridorThickness,ref deadEndOndulation,ref mainScript.edges );
+                        , ref selGridConnectionType, ref selGridPathGenType,ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount,ref deadEndOndulation,ref mainScript.edges );
 
 
                     #endregion
@@ -134,8 +131,6 @@ namespace DungeonForge.Editor
                     mainScript.allowedForward = false;
 
                     DFEditorUtil.SaveGridDataToGenerateEditorSection(mainScript.pcgManager, saveMapFileName, out saveMapFileName);
-
-
 
                     break;
 
@@ -151,7 +146,7 @@ namespace DungeonForge.Editor
 
                 EditorGUI.BeginDisabledGroup(mainScript.allowedBack == false);
 
-                if (GUILayout.Button(new GUIContent() { text = "Go Back", tooltip = mainScript.allowedForward == true ? "Press this to go back one step" : "You cant go back" }))// gen something
+                if (GUILayout.Button(new GUIContent() { text = "Go Back", tooltip = mainScript.allowedForward == true ? "Press this to go back one step" : "You can't go back" }))// gen something
                 {
                     mainScript.pcgManager.ClearUndos();
                     mainScript.allowedBack = false;
@@ -176,9 +171,6 @@ namespace DungeonForge.Editor
 
                 EditorGUI.EndDisabledGroup();
             }
-
-
-
         }
     }
 }

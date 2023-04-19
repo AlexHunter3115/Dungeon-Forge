@@ -1,8 +1,7 @@
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-
 namespace DS.Elements 
 {
+    using UnityEditor.Experimental.GraphView;
+    using UnityEngine;
     using DS.Enumerations;
     using DS.Windows;
     using UnityEditor;
@@ -14,13 +13,13 @@ namespace DS.Elements
         public DSDialogueType dialogueType { get; set; }
         public string indexVal = "";
         public string nodeGuid = "";
-        private DSGraphView _graphView;
+        private DSGraphView graphView;
         public string titleString;
         public string tileNameString;
 
         public virtual void Initialize(Vector2 pos, DSGraphView graphView) 
         {
-            this._graphView = graphView;
+            this.graphView = graphView;
             nodeGuid = GUID.Generate().ToString();
 
             SetPosition(new Rect(pos, Vector2.zero));
@@ -37,7 +36,7 @@ namespace DS.Elements
 
             if (isNumber) // is it a string 
             {
-                if (_graphView.ruleDict.ContainsKey(idx)) 
+                if (graphView.ruleDict.ContainsKey(idx)) 
                 {
 
                     allowed = true;

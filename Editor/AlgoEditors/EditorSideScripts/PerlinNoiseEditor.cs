@@ -25,7 +25,6 @@ namespace DungeonForge.Editor
         int deadEndOndulation = 20;
 
         int deadEndAmount = 0;
-        int deadEndCorridorThickness = 3;
 
         int radius = 10;
 
@@ -42,12 +41,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have choosen Perlin noise Generation  ---   to write");
-
+                GUILayout.TextArea("Perlin Noise is a procedural noise function that can generate coherent, continuous noise patterns. By using thresholds, the algorithm can convert this noise into binary data, creating distinct regions for rooms and corridors. This results in a dungeon with a smooth, organic appearance and is suitable for generating natural-looking cave systems or dungeons with a fluid layout.\n\nFor more information visit the wiki: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#3-perlin-noise");
             }
 
             if (!Selection.activeTransform)
@@ -89,24 +87,22 @@ namespace DungeonForge.Editor
 
             #endregion
 
-
             switch (mainScript.currUiState)
             {
                 case DFEditorUtil.UI_STATE.MAIN_ALGO:
                     {
                         mainScript.allowedBack = false;
-                        mainScript.OffsetX = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Offset X", tooltip = "" }, mainScript.OffsetX, 0, 10000);
-                        mainScript.OffsetY = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Offset Y", tooltip = "" }, mainScript.OffsetY, 0, 10000);
-
-
-                        mainScript.Scale = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Scale", tooltip = "" }, mainScript.Scale, 3f, 35f);
-                        mainScript.Octaves = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Octaves", tooltip = "" }, mainScript.Octaves, 1, 8);
-
-                        mainScript.Persistance = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Persitance", tooltip = "" }, mainScript.Persistance, 0.1f, 0.9f);
-                        mainScript.Lacunarity = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Lacunarity", tooltip = "" }, mainScript.Lacunarity, 0.5f, 10f);
-
-                        mainScript.Threshold = EditorGUILayout.Slider(new GUIContent() { text = "Max Threshold", tooltip = "" }, mainScript.Threshold, 0.1f, 0.9f);
-
+                        mainScript.OffsetX = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Offset X", tooltip = "The X offset of the Perlin noise pattern" }, mainScript.OffsetX, 0, 10000);
+                        mainScript.OffsetY = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Offset Y", tooltip = "The Y offset of the Perlin noise pattern" }, mainScript.OffsetY, 0, 10000);
+                        
+                        mainScript.Scale = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Scale", tooltip = "The scale of the Perlin noise pattern" }, mainScript.Scale, 3f, 35f);
+                        mainScript.Octaves = (int)EditorGUILayout.Slider(new GUIContent() { text = "Perlin Octaves", tooltip = "The number of layers of Perlin noise to combine" }, mainScript.Octaves, 1, 8);
+                        
+                        mainScript.Persistance = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Persitance", tooltip = "The rate at which the amplitude decreases for each successive octave" }, mainScript.Persistance, 0.1f, 0.9f);
+                        mainScript.Lacunarity = EditorGUILayout.Slider(new GUIContent() { text = "Perlin Lacunarity", tooltip = "The rate at which the frequency increases for each successive octave" }, mainScript.Lacunarity, 0.5f, 10f);
+                        
+                        mainScript.Threshold = EditorGUILayout.Slider(new GUIContent() { text = "Max Threshold", tooltip = "The maximum threshold value for the generated noise" }, mainScript.Threshold, 0.1f, 0.9f);
+                        
                         if (GUILayout.Button("Generate Noise"))
                         {
                             DFAlgoBank.PerlinNoise(mainScript.pcgManager.gridArr, mainScript.Scale, mainScript.Octaves, mainScript.Persistance, mainScript.Lacunarity, mainScript.OffsetX, mainScript.OffsetY, mainScript.Threshold);
@@ -159,8 +155,7 @@ namespace DungeonForge.Editor
                     mainScript.allowedBack = true;
 
                     DFEditorUtil.GenerateCorridorsEditorSection(mainScript.pcgManager, mainScript.rooms, ref mainScript.allowedForward, ref mainScript.allowedBack, ref corridorThickness
-                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount, ref deadEndCorridorThickness, ref deadEndOndulation, ref mainScript.edges);
-
+                     , ref selGridConnectionType, ref selGridPathGenType, ref useWeights, ref bezierOndulation, ref mainScript.pathType, ref randomAddCorr, ref deadEndAmount,  ref deadEndOndulation, ref mainScript.edges);
 
                     #endregion
 

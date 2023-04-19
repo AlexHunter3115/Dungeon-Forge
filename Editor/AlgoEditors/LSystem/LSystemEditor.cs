@@ -24,11 +24,11 @@ namespace DungeonForge.Editor
 
             DFEditorUtil.SpacesUILayout(4);
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have choosen l system");
+                GUILayout.TextArea("L-system, or Lindenmayer system, is a string rewriting system that generates complex structures through recursive rules. In the context of dungeon generation, L-systems can be used to create intricate, branching corridors and rooms by applying predefined growth rules. This is ideal for generating dungeons with a more structured, maze-like layout.\n\n For more information visit the wiki: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#2-l-system");
 
             }
 

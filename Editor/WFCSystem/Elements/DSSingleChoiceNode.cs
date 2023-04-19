@@ -1,7 +1,6 @@
-using UnityEngine;
-
 namespace DS.Elements 
 {
+    using UnityEngine;
     using DS.Utilities;
     using DS.Windows;
     using Enumerations;
@@ -10,19 +9,14 @@ namespace DS.Elements
 
     public class DSSingleChoiceNode : DSNode
     {
-
         public override void Initialize(Vector2 pos, DSGraphView graphView)
         {
-
             base.Initialize(pos, graphView);
 
             titleString = "\n Sub Rule Node";
 
             dialogueType = DSDialogueType.SingleChoice;
-
-            //Choices.Add("Next Dialogue");
         }
-
 
         public override void Draw()
         {
@@ -30,14 +24,12 @@ namespace DS.Elements
 
             Label dialogueTextField;
 
-                 dialogueTextField = new Label(titleString);
+            dialogueTextField = new Label(titleString);
 
             titleContainer.Insert(0, dialogueTextField);
 
-
             Port DownPort = this.CreatePort("Output Port", Orientation.Horizontal, Direction.Output, Port.Capacity.Multi);
             outputContainer.Add(DownPort);
-
 
             var textFieldIndexRule = DSElementUtility.CreateTextField(indexVal);
             textFieldIndexRule.MarkDirtyRepaint();
@@ -48,13 +40,5 @@ namespace DS.Elements
             RefreshPorts();
             RefreshExpandedState();
         }
-
-
     }
-
-
-
-
-
 }
-

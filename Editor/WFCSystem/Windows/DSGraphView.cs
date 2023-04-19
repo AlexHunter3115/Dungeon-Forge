@@ -1,12 +1,13 @@
-using DS.Elements;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.UIElements;
+
 
 namespace DS.Windows
 {
+    using DS.Elements;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEditor.Experimental.GraphView;
+    using UnityEngine;
+    using UnityEngine.UIElements;
     using DS.Enumerations;
     using DS.Utilities;
     using System;
@@ -15,20 +16,19 @@ namespace DS.Windows
 
     public class DSGraphView : GraphView
     {
+        private DSSearchWindow _searchWindow;
 
-        private DSSearchWindow searchWindow;
+        private DSEditorWindow _editorWindow;
 
-        private DSEditorWindow editorWindow;
+        private GraphViewDataCont _graphViewCont;
 
-        private GraphViewDataCont graphViewCont;
+        private DSInfoNodeNode _ruleNode;
 
-        private DSInfoNodeNode ruleNode;
         public IDictionary<int, string> ruleDict = new Dictionary<int, string>();
-
 
         public DSGraphView(DSEditorWindow dSEditorWindow)
         {
-            editorWindow = dSEditorWindow;
+            _editorWindow = dSEditorWindow;
 
             this.RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
 
@@ -87,15 +87,15 @@ namespace DS.Windows
         }
         private void AddSearchWindow()
         {
-            if (searchWindow == null)
+            if (_searchWindow == null)
             {
-                searchWindow = ScriptableObject.CreateInstance<DSSearchWindow>();
+                _searchWindow = ScriptableObject.CreateInstance<DSSearchWindow>();
 
-                searchWindow.Initilize(this);
+                _searchWindow.Initilize(this);
 
             }
 
-            nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
+            nodeCreationRequest = context => SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _searchWindow);
         }
 
         private void AddManipulators()
@@ -151,8 +151,8 @@ namespace DS.Windows
 
             if (respawn)
             {
-                ruleNode = (DSInfoNodeNode)CreateNode(DSDialogueType.InfoNode, Vector2.zero);
-                this.AddElement(ruleNode);
+                _ruleNode = (DSInfoNodeNode)CreateNode(DSDialogueType.InfoNode, Vector2.zero);
+                this.AddElement(_ruleNode);
             }
 
             if (fileName == null) { return; }
@@ -185,26 +185,26 @@ namespace DS.Windows
         }
         private void AddRuleNode(List<string> TileSetNames)
         {
-            ruleNode.inputContainer.Clear();
-            ruleNode.outputContainer.Clear();
+            _ruleNode.inputContainer.Clear();
+            _ruleNode.outputContainer.Clear();
 
             Label tileNameDesc = new Label() { text = "Name of the tile:" };
             Label tileIndexDesc = new Label() { text = "Index of the tile:" };
 
-            ruleNode.inputContainer.Add(tileNameDesc);
-            ruleNode.outputContainer.Add(tileIndexDesc);
+            _ruleNode.inputContainer.Add(tileNameDesc);
+            _ruleNode.outputContainer.Add(tileIndexDesc);
 
-            ruleNode.RefreshExpandedState();
+            _ruleNode.RefreshExpandedState();
 
             for (int i = 0; i < TileSetNames.Count; i++)
             {
                 Label tileName = new Label() { text = TileSetNames[i] };
                 Label tileIndex = new Label() { text = "    " + i.ToString() };
 
-                ruleNode.inputContainer.Add(tileName);
-                ruleNode.outputContainer.Add(tileIndex);
+                _ruleNode.inputContainer.Add(tileName);
+                _ruleNode.outputContainer.Add(tileIndex);
 
-                ruleNode.RefreshExpandedState();
+                _ruleNode.RefreshExpandedState();
             }
         }
 
@@ -304,9 +304,9 @@ namespace DS.Windows
         {
             Vector2 worldMousePos = pos;
 
-            if (searchWindow)
+            if (_searchWindow)
             {
-                worldMousePos -= editorWindow.position.position;
+                worldMousePos -= _editorWindow.position.position;
             }
 
             Vector2 localMousePos = contentViewContainer.WorldToLocal(worldMousePos);
@@ -318,9 +318,9 @@ namespace DS.Windows
 
         public void LoadGraph(string filename)
         {
-            graphViewCont = Resources.Load<GraphViewDataCont>("Resources_Algorithms/WFC_Rule_Sets/" + filename);
+            _graphViewCont = Resources.Load<GraphViewDataCont>("Resources_Algorithms/WFC_Rule_Sets/" + filename);
 
-            if (graphViewCont == null) { return; }
+            if (_graphViewCont == null) { return; }
 
             ClearGraph();
             GenNodes();
@@ -329,7 +329,7 @@ namespace DS.Windows
             var arr = nodes.ToList().Cast<DSNode>().ToList();
             ConnectNodes(arr);
 
-            RefreshRules(editorWindow._fileNameResources);
+            RefreshRules(_editorWindow.fileNameResources);
         }
         private void ClearGraph()
         {
@@ -347,7 +347,7 @@ namespace DS.Windows
         {
             var list = new List<DSNode>();
 
-            foreach (var node in graphViewCont.nodeData)
+            foreach (var node in _graphViewCont.nodeData)
             {
                 var createdNode = CreateNode(node.dialogueType, node.position, node.IndexTile, node.nodeGuid);
                 list.Add(createdNode);
@@ -356,7 +356,7 @@ namespace DS.Windows
         }
         private void ConnectNodes(List<DSNode> arr)
         {
-            var nodeConnections = graphViewCont.nodeLinkData;
+            var nodeConnections = _graphViewCont.nodeLinkData;
 
             foreach (var nodeCon in nodeConnections)
             {
@@ -389,7 +389,7 @@ namespace DS.Windows
 
         private void GenQuickNodes()
         {
-            foreach (var quickNode in graphViewCont.quickNodeData)
+            foreach (var quickNode in _graphViewCont.quickNodeData)
             {
                 var createdNode = CreateQuickNode(quickNode.dialogueType, quickNode.position, quickNode.IndexTile, quickNode.nodeGuid, 
                     quickNode.IsOpenAbove, quickNode.IsOpenBelow, quickNode.IsOpenLeft, quickNode.IsOpenRight);

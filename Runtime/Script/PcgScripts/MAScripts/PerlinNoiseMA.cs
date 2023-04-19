@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 
 namespace DungeonForge.AlgoScript
 {
@@ -11,8 +9,6 @@ namespace DungeonForge.AlgoScript
     {
         [HideInInspector]
         public PCGManager pcgManager;
-
-
 
         // main algo specific
         private int offsetX;

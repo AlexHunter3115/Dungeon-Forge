@@ -26,23 +26,22 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            //showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
 
-            if (showRules)
-            {
-                GUILayout.TextArea("You have choosen The Wave Function algorithm as your algorithm\n\nExplenation: \n\nStep 1: Create a folder, in the Resource standard folder of unity, and insert all the tile objects required in there. Input the folder name in the Tile Set file name variable and then load the tileSet" +
-                    "\n\nStep 2: Create the RuleSet using the GraphView provided and input the name of the ruleSet in the variable space. Load the ruleSet" +
-                    "\n\nStep 3: Decide if to have tiles in the outskirts of the map to, if so tick the box and give the index of the tile that is in the outskirt but looking at the tile set array" +
-                    "\n\nStep 4: Run the WFC algo");
+            //if (showRules)
+            //{
+            //    GUILayout.TextArea("You have choosen The Wave Function algorithm as your algorithm\n\nExplenation: \n\nStep 1: Create a folder, in the Resource standard folder of unity, and insert all the tile objects required in there. Input the folder name in the Tile Set file name variable and then load the tileSet" +
+            //        "\n\nStep 2: Create the RuleSet using the GraphView provided and input the name of the ruleSet in the variable space. Load the ruleSet" +
+            //        "\n\nStep 3: Decide if to have tiles in the outskirts of the map to, if so tick the box and give the index of the tile that is in the outskirt but looking at the tile set array" +
+            //        "\n\nStep 4: Run the WFC algo");
+            //}
 
-            }
+            //if (!Selection.activeTransform)
+            //{
+            //    showRules = false;
+            //}
 
-            if (!Selection.activeTransform)
-            {
-                showRules = false;
-            }
-
-            EditorGUILayout.EndFoldoutHeaderGroup();
+            //EditorGUILayout.EndFoldoutHeaderGroup();
 
             #endregion
 

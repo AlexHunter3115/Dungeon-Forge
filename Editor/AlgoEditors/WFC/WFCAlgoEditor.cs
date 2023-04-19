@@ -21,11 +21,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have choosen wfc");
+                GUILayout.TextArea("The Wave Function Collapse algorithm uses a set of predefined patterns to generate dungeons that obey certain constraints. By defining a set of input patterns, the algorithm can create a dungeon with a specific aesthetic and structural coherence. This algorithm is particularly useful for generating dungeons with a consistent style or theme.\n\n Visit the wiki for more informations: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#wave-function-collapse-wfc");
             }
 
             if (!Selection.activeTransform)

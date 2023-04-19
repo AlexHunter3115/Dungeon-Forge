@@ -4,7 +4,6 @@ namespace DungeonForge.AlgoScript
 {
     using System.Collections.Generic;
     using UnityEngine;
-
     using DungeonForge.Utils;
     using static DungeonForge.AlgoScript.PCGManager;
     using System.Threading.Tasks;
@@ -12,6 +11,7 @@ namespace DungeonForge.AlgoScript
     public class LoadMapMA : MonoBehaviour
     {
         [SerializeField]
+        [Tooltip("Populate this list with the ranomd debries to spawn around the map when using the poissant algorithm")]
         public List<TileRuleSetPCG> mapRandomObjects = new List<TileRuleSetPCG>();
 
         [HideInInspector]
@@ -24,6 +24,8 @@ namespace DungeonForge.AlgoScript
         [HideInInspector]
         public List<List<DFTile>> rooms = new List<List<DFTile>>();
 
+        [HideInInspector]
+        public List<Edge> edges = new List<Edge>();
 
         [HideInInspector]
         public bool singleStringSelected = true;
@@ -52,6 +54,7 @@ namespace DungeonForge.AlgoScript
         [HideInInspector]
         public float heigthPoissant = 0;
 
+
         public enum UI_STATE
         {
             PICKING_FILE,
@@ -68,6 +71,8 @@ namespace DungeonForge.AlgoScript
             pcgManager = this.transform.GetComponent<PCGManager>();
         }
 
+        [HideInInspector]
+        public List<GameObject> generatedPoissantObjList = new List<GameObject>();
 
         public void AddOnGridData(DFTile[,] gridToAddOn, bool wallDominance) 
         {
@@ -180,5 +185,19 @@ namespace DungeonForge.AlgoScript
                 Gizmos.DrawSphere(new Vector3(0, heigthPoissant, 0),0.5f);
             }
         }
+
+        public void DeleteAllGenObjects() 
+        {
+            if (generatedPoissantObjList.Count > 0) 
+            {
+                foreach (GameObject obj in generatedPoissantObjList)
+                {
+                    DestroyImmediate(obj);
+                }
+            }
+
+            generatedPoissantObjList.Clear();
+        }
+
     }
 }

@@ -48,11 +48,11 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Instructions");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Introduction");
 
             if (showRules)
             {
-                GUILayout.TextArea("You have chosen delu");
+                GUILayout.TextArea("Delaunay Triangulation first generates random points around the map and then creates a set of non-overlapping triangles by connecting these points. Following triangulation, the algorithm connects the triangle vertices using Bezier curves, resulting in a maze-like dungeon layout. This method is suitable for generating dungeons with interconnected paths and a complex, maze-like structure.\n\n Visit the wiki for more information: https://github.com/AlessandroBufalino3115/Dungeon-Forge/wiki/Using-the-Pack#10-delaunay-triangulation ");
 
             }
 
@@ -82,21 +82,21 @@ namespace DungeonForge.Editor
                         {
                             case 0:  //sphere
 
-                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "radius of sphere", tooltip = "" }, width, 10, 50);
+                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "Radius of circle", tooltip = "" }, width, 10, 50);
 
                                 break;
 
                             case 1: // room
 
-                                height = (int)EditorGUILayout.Slider(new GUIContent() { text = "height", tooltip = "" }, height, 10, 50);
+                                height = (int)EditorGUILayout.Slider(new GUIContent() { text = "Height", tooltip = "" }, height, 10, 50);
                                 width = (int)EditorGUILayout.Slider(new GUIContent() { text = "width", tooltip = "" }, width, 10, 50);
 
                                 break;
 
                             case 2: // random walk
 
-                                height = (int)EditorGUILayout.Slider(new GUIContent() { text = "height", tooltip = "" }, height, 10, 50);
-                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "width", tooltip = "" }, width, 10, 50);
+                                height = (int)EditorGUILayout.Slider(new GUIContent() { text = "Height", tooltip = "" }, height, 10, 50);
+                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "Width", tooltip = "" }, width, 10, 50);
                                 break;
 
                             //case 3:
@@ -199,10 +199,10 @@ namespace DungeonForge.Editor
                     {
                         EditorGUI.BeginDisabledGroup(mainScript.generatedCorridors == true);
 
-                        numbersOfVertices = (int)EditorGUILayout.Slider(new GUIContent() { text = "number of intersections", tooltip = "" }, numbersOfVertices, 5, 50);
-                        ondulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Ondulation", tooltip = "" }, ondulation, 5, 40);
+                        numbersOfVertices = (int)EditorGUILayout.Slider(new GUIContent() { text = "Number of vertices", tooltip = "number of points where the paths are going to meet" }, numbersOfVertices, 5, 50);
+                        ondulation = (int)EditorGUILayout.Slider(new GUIContent() { text = "Ondulation", tooltip = "The higher the number the more curved the corridors will be" }, ondulation, 5, 40);
 
-                        corridorWidth = (int)EditorGUILayout.Slider(new GUIContent() { text = "corridor thickness", tooltip = "" }, corridorWidth, 3, 6);
+                        corridorWidth = (int)EditorGUILayout.Slider(new GUIContent() { text = "Corridor thickness", tooltip = "" }, corridorWidth, 3, 6);
 
                         DFEditorUtil.SpacesUILayout(2);
 
@@ -287,7 +287,7 @@ namespace DungeonForge.Editor
                         DFEditorUtil.SpacesUILayout(2);
 
 
-                        if (GUILayout.Button(new GUIContent() { text = "gen the branches", tooltip = "" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Generate the path", tooltip = "" }))
                         {
                             mainScript.generatedCorridors = true;
 
@@ -338,7 +338,7 @@ namespace DungeonForge.Editor
                                     case 2: // square
                                         {
                                             var room = DFAlgoBank.CreateSquareRoom(confirmedWidth,confirmedHeight,randomPoint,mainScript.pcgManager.gridArr,true);
-                                            Debug.Log($"{room.Count}");
+                                           
                                             if (room == null)
                                                 Debug.Log($"There is an issue");
                                             else

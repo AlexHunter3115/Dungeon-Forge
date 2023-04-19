@@ -1,18 +1,20 @@
-using DS.Enumerations;
-using DS.Utilities;
-using DS.Windows;
-using UnityEngine;
-using UnityEngine.UIElements;
+
 
 namespace DS.Elements
 {
+    using DS.Enumerations;
+    using DS.Utilities;
+    using DS.Windows;
+    using UnityEngine;
+    using UnityEngine.UIElements;
+
     public class DSQuickRuleNode : DSNode
     {
+
         public bool isOpenLeftBool;
         public bool isOpenRightBool;
         public bool isOpenAboveBool;
         public bool isOpenBelowBool;
-
 
         public override void Initialize(Vector2 pos, DSGraphView graphView)
         {
