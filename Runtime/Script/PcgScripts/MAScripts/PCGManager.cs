@@ -32,14 +32,14 @@ namespace DungeonForge.AlgoScript
 
         [Header("Dungeon Generation Settings")]
         [Tooltip("How wide the drawing canvas where the algorithms will take place will be")]
-        [Range(50, 1000)]
+        [Range(50, 750)]
         public int width = 125;
 
         [Tooltip("How tall the drawing canvas where the algorithms will take place will be")]
-        [Range(50, 1000)]
+        [Range(50, 750)]
         public int height = 125;
 
-        [Tooltip("How tall the dungeon will be.")]
+        [Tooltip("How tall the dungeon will be. Floor and ceiling are also counted, therefore a 4 high dungeon will be 1 floor, 2 air and 1 ceiling")]
         [Range(3f, 8f)]
         public int RoomHeight = 4;
 
@@ -799,6 +799,4 @@ namespace DungeonForge.AlgoScript
 
         #endregion
     }
-
-
 }

@@ -176,7 +176,7 @@ namespace DungeonForge.AlgoScript
                     ranWidth *= -1;
 
 
-                int ranHeight = Random.Range(minHeight, minWidth);
+                int ranHeight = Random.Range(minHeight, MaxHeight);
                 if (Random.value > 0.5f)
                     ranHeight *= -1;
 
@@ -255,7 +255,6 @@ namespace DungeonForge.AlgoScript
         /// <returns></returns>
         public bool AABBCol(RoomsClass newRoom, RoomsClass oldRoom)
         {
-
             if (newRoom.minX >= oldRoom.minX && newRoom.minX <= oldRoom.maxX || newRoom.maxX >= oldRoom.minX && newRoom.maxX <= oldRoom.maxX)
             {
                 if (newRoom.minY >= oldRoom.minY && newRoom.minY <= oldRoom.maxY || newRoom.maxY >= oldRoom.minY && newRoom.maxY <= oldRoom.maxY)
@@ -264,14 +263,10 @@ namespace DungeonForge.AlgoScript
                 }
             }
 
-
-
             return false;
         }
 
-
         #endregion
-
 
         public void WorkoutRegion(RoomsClass room)
         {
@@ -325,7 +320,6 @@ namespace DungeonForge.AlgoScript
             }
         }
 
-
         public List<BoundsInt> BPSAlgo2d(BoundsInt toSplit)
         {
             Queue<BoundsInt> roomsQueue = new Queue<BoundsInt>();
@@ -338,7 +332,6 @@ namespace DungeonForge.AlgoScript
 
                 if (room.size.z >= minHeight && room.size.x >= minWidth)
                 {
-
                     if (Random.value < 0.5f)
                     {
                         if (room.size.z >= minHeight * 2 + 1)
@@ -371,14 +364,11 @@ namespace DungeonForge.AlgoScript
                     }
                 }
             }
-
             return roomsListBPSAlgo;
-
         }
 
         public void SplitVert(int minWidth, BoundsInt room, Queue<BoundsInt> roomQue)
         {
-
             int minX = room.min.x;
             int maxX = room.max.x;
 
