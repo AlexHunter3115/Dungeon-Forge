@@ -13,15 +13,15 @@ namespace DungeonForge.Editor
         bool showRules = false;
 
         int selStartRoomGenType = 0;
-        GUIContent[] selStringStartRoomGenType = { new GUIContent() { text = "Circle room", tooltip = "" }, new GUIContent() { text = "square room", tooltip = "" }, new GUIContent() { text = "Random Room Gen", tooltip = "" } };
+        GUIContent[] selStringStartRoomGenType = { new GUIContent() { text = "Circle room", tooltip = "" }, new GUIContent() { text = "square room", tooltip = "" }, new GUIContent() { text = "Random Room Layout", tooltip = "Spawns a square rooms and then performs the Cellular automata algorithm on the room for a more interesting layout" } };
 
         int selOtherRoomGenType = 0;
         GUIContent[] selStringOtherRoomGenType = 
             { new GUIContent() { text = "None", tooltip = "" }, 
             new GUIContent() { text = "Circle", tooltip = "" }, 
             new GUIContent() { text = "Square Room", tooltip = "" }, 
-            new GUIContent() { text = "Random Room Gen", tooltip = "" }, 
-            new GUIContent() { text = "Mix of rooms", tooltip = "" } };
+            new GUIContent() { text = "Random Room Layout", tooltip = "Spawns a square rooms and then performs the Cellular automata algorithm on the room for a more interesting layout" }, 
+            new GUIContent() { text = "Mix of rooms", tooltip = "A mix of all" } };
 
         int widthFrom=5;
         int widthTo=10;
@@ -89,7 +89,7 @@ namespace DungeonForge.Editor
                             case 1: // room
 
                                 height = (int)EditorGUILayout.Slider(new GUIContent() { text = "Height", tooltip = "" }, height, 10, 50);
-                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "width", tooltip = "" }, width, 10, 50);
+                                width = (int)EditorGUILayout.Slider(new GUIContent() { text = "Width", tooltip = "" }, width, 10, 50);
 
                                 break;
 
@@ -99,15 +99,12 @@ namespace DungeonForge.Editor
                                 width = (int)EditorGUILayout.Slider(new GUIContent() { text = "Width", tooltip = "" }, width, 10, 50);
                                 break;
 
-                            //case 3:
-                            //    break;
-
                             default:
                                 break;
                         }
 
 
-                        if (GUILayout.Button(new GUIContent() { text = "Generate start room", tooltip = "" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Generate starting room", tooltip = "" }))
                         {
                             var centerPoint = new Vector2Int(mainScript.pcgManager.gridArr.GetLength(0) / 2, mainScript.pcgManager.gridArr.GetLength(1) / 2);
 
@@ -210,10 +207,11 @@ namespace DungeonForge.Editor
                         selOtherRoomGenType = GUILayout.SelectionGrid(selOtherRoomGenType, selStringOtherRoomGenType, 1);
                         GUILayout.EndVertical();
 
+
+
                         switch (selOtherRoomGenType)
                         {
                             case 0:  //none
-
 
                                 break;
 
@@ -263,8 +261,8 @@ namespace DungeonForge.Editor
 
                             case 4:  //mix
 
-                                widthFrom = (int)EditorGUILayout.Slider(new GUIContent() { text = "Minimum width/diameter of the rooms", tooltip = "" }, widthFrom, 5, 50);
-                                widthTo = (int)EditorGUILayout.Slider(new GUIContent() { text = "Maximum width/diameter of the rooms", tooltip = "" }, widthTo, 10, 55);
+                                widthFrom = (int)EditorGUILayout.Slider(new GUIContent() { text = "Minimum width/diameter of the rooms", tooltip = "This acts as the diameter for the cirlce room too" }, widthFrom, 5, 50);
+                                widthTo = (int)EditorGUILayout.Slider(new GUIContent() { text = "Maximum width/diameter of the rooms", tooltip = "This acts as the diameter for the cirlce room too" }, widthTo, 10, 55);
 
 
                                 heightFrom = (int)EditorGUILayout.Slider(new GUIContent() { text = "Minimum width of the rooms", tooltip = "" }, heightFrom, 5, 50);
@@ -485,7 +483,7 @@ namespace DungeonForge.Editor
 
                 EditorGUI.BeginDisabledGroup(mainScript.allowedBack == false);
 
-                if (GUILayout.Button(new GUIContent() { text = "Go Back", tooltip = mainScript.allowedForward == true ? "Press this to go back one step" : "You cant go back" }))// gen something
+                if (GUILayout.Button(new GUIContent() { text = "Go Back", tooltip = mainScript.allowedForward == true ? "Press this to go back one step" : "You can't go back" }))// gen something
                 {
                     mainScript.pcgManager.ClearUndos();
                     mainScript.allowedBack = false;
@@ -494,7 +492,6 @@ namespace DungeonForge.Editor
                 }
 
                 EditorGUI.EndDisabledGroup();
-
 
                 EditorGUI.BeginDisabledGroup(mainScript.allowedForward == false);
 

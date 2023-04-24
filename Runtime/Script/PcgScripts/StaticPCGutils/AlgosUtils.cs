@@ -17,7 +17,10 @@ namespace DungeonForge.Utils
     {
         #region marching Cubes Rule
 
-        //http://paulbourke.net/geometry/polygonise/
+        // Marching Cubes Ruleset
+        // Author: Paul Bourke
+        // Source: http://paulbourke.net/geometry/polygonise/
+        // Date: May 1994
         /// <summary>
         /// ruleSet used by the marhcing cubes algorithm
         /// </summary>
@@ -1588,7 +1591,7 @@ namespace DungeonForge.Utils
         /// <returns></returns>
         public static void SpawnRandomPointsOnTheGrid(DFTile[,] gridArr, float percentageOfSpawn = 0.5f, float weight = 1)
         {
-            Parallel.For(0, gridArr.GetLength(1), y =>
+            for (int y = 0; y < gridArr.GetLength(1); y++)
             {
                 for (int x = 0; x < gridArr.GetLength(0); x++)
                 {
@@ -1601,7 +1604,7 @@ namespace DungeonForge.Utils
                         gridArr[x, y].tileWeight = weight;
                     }
                 }
-            });
+            }
         }
 
         /// <summary>
@@ -2690,7 +2693,6 @@ namespace DungeonForge.Utils
         }
 
         #endregion
-
     }
 
     #region classes

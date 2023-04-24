@@ -33,6 +33,9 @@ namespace DungeonForge.AlgoScript
         [HideInInspector]
         public List<Edge> edges = new List<Edge>();
 
+        [HideInInspector]
+        public bool typeOfVoronoi = false;
+        
         public void DeleteLastSavedRoom()
         {
             if (currUiState == DFEditorUtil.UI_STATE.EXTRA_ROOM_GEN)

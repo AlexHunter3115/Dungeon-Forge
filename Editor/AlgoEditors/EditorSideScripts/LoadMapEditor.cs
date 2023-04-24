@@ -270,6 +270,8 @@ namespace DungeonForge.Editor
 
                                 case 1:
                                     {
+                                        mainScript.pcgManager.DeleteNotNeededWalls();
+
                                         if (blockGeneration)
                                             mainScript.pcgManager.DrawTileMapBlockType();
                                         else
@@ -356,7 +358,6 @@ namespace DungeonForge.Editor
 
             if (mainScript.state != LoadMapMA.UI_STATE.GENERATE)
             {
-
                 EditorGUI.BeginDisabledGroup(mainScript.allowedBack == false);
 
                 if (GUILayout.Button(new GUIContent() { text = "Go Back", tooltip = mainScript.allowedForward == true ? "Press this to go back one step" : "You cant go back" })) // gen something
@@ -368,7 +369,6 @@ namespace DungeonForge.Editor
                 }
 
                 EditorGUI.EndDisabledGroup();
-
 
                 EditorGUI.BeginDisabledGroup(mainScript.allowedForward == false);
 
@@ -383,7 +383,6 @@ namespace DungeonForge.Editor
                     mainScript.allowedForward = false;
                     mainScript.currStateIndex++;
                     mainScript.state = (LoadMapMA.UI_STATE)mainScript.currStateIndex;
-
                 }
 
                 EditorGUI.EndDisabledGroup();

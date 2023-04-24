@@ -15,7 +15,6 @@ namespace DungeonForge.Editor
 
         int vorPoints = 5;
         int minNumOfRooms = 1;
-        bool typeOfVoronoi = false;
         bool voronoiCalculation = false;
 
         int selGridPathGenType = 0;
@@ -47,7 +46,7 @@ namespace DungeonForge.Editor
 
             #region explanation
 
-            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Descirption");
+            showRules = EditorGUILayout.BeginFoldoutHeaderGroup(showRules, "Description");
 
             if (showRules)
             {  
@@ -70,7 +69,7 @@ namespace DungeonForge.Editor
             {
                 case DFEditorUtil.UI_STATE.MAIN_ALGO:
                     {
-                        typeOfVoronoi = EditorGUILayout.Toggle(new GUIContent() { text = typeOfVoronoi == true ? "Room to Room is selected" : "Random deletion room is selected", tooltip = typeOfVoronoi == true ? $"Will create {vorPoints} number of rooms and connect the rooms with small to no corridors" : $"Random deletion room is selected, will generate {vorPoints} rooms and then randomly delete them untill only {minNumOfRooms} are left" }, typeOfVoronoi);
+                        mainScript.typeOfVoronoi = EditorGUILayout.Toggle(new GUIContent() { text = mainScript.typeOfVoronoi == true ? "Room to Room is selected" : "Random deletion room is selected", tooltip = mainScript.typeOfVoronoi == true ? $"Will create {vorPoints} number of rooms and connect the rooms with small to no corridors" : $"Random deletion room is selected, will generate {vorPoints} rooms and then randomly delete them untill only {minNumOfRooms} are left" }, mainScript.typeOfVoronoi);
 
                         DFEditorUtil.SpacesUILayout(1);
 
@@ -78,7 +77,7 @@ namespace DungeonForge.Editor
                         voronoiCalculation = EditorGUILayout.Toggle(new GUIContent() { text = voronoiCalculation == true ? "Euclidian distance calculation selected" : "Manhattan distance calculation selected", tooltip = "" }, voronoiCalculation);
 
 
-                        if (!typeOfVoronoi)
+                        if (!mainScript.typeOfVoronoi)
                             minNumOfRooms = (int)EditorGUILayout.Slider(new GUIContent() { text = "Number of rooms", tooltip = "" }, minNumOfRooms, 2, vorPoints - 2);
 
 
@@ -90,7 +89,7 @@ namespace DungeonForge.Editor
 
                             mainScript.rooms = DFAlgoBank.GetAllRooms(mainScript.pcgManager.gridArr);
 
-                            if (!typeOfVoronoi)
+                            if (!mainScript.typeOfVoronoi)
                             {
                                 while (mainScript.rooms.Count > minNumOfRooms)
                                 {
@@ -145,7 +144,7 @@ namespace DungeonForge.Editor
 
                 case DFEditorUtil.UI_STATE.EXTRA_ROOM_GEN:
                     {
-                        if (!typeOfVoronoi)
+                        if (!mainScript.typeOfVoronoi)
                         {
                             mainScript.allowedForward = true;
                             mainScript.allowedBack = false;
@@ -166,7 +165,7 @@ namespace DungeonForge.Editor
                     {
                         #region corridor making region
 
-                        if (typeOfVoronoi)
+                        if (mainScript.typeOfVoronoi)
                         {
 
                             EditorGUI.BeginDisabledGroup(mainScript.pcgManager.prevGridArray2D.Count == 1);

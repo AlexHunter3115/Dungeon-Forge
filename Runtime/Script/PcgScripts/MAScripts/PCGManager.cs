@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 namespace DungeonForge.AlgoScript
 {
     using DungeonForge.Utils;
+    using System.Threading.Tasks;
 
     public class PCGManager : MonoBehaviour
     {
@@ -762,6 +763,68 @@ namespace DungeonForge.AlgoScript
             }
         }
 
+        public void DeleteNotNeededWalls()
+        {
+
+            var listOfIndexes = new List<Vector2Int>();
+
+            for (int y = 0; y < gridArr.GetLength(1); y++)
+            {
+                for (int x = 0; x < gridArr.GetLength(0); x++)
+                {
+                    DFTile currentTile = gridArr[x, y];
+
+                    if (currentTile.tileType == DFTile.TileType.WALL || currentTile.tileType == DFTile.TileType.WALLCORRIDOR)
+                    {
+                        bool hasVoidNeighbor = false;
+
+                        bool hasFloorNeighbor = false;
+
+                        int[] neighborX = { -1, 1, 0, 0 };
+                        int[] neighborY = { 0, 0, -1, 1 };
+
+                        for (int i = 0; i < neighborX.Length; i++)
+                        {
+                            int newX = x + neighborX[i];
+                            int newY = y + neighborY[i];
+
+                            if (newX >= 0 && newX < gridArr.GetLength(0) && newY >= 0 && newY < gridArr.GetLength(1))
+                            {
+                                DFTile neighborTile = gridArr[newX, newY];
+
+                                if (neighborTile.tileType == DFTile.TileType.VOID)
+                                {
+                                    hasVoidNeighbor = true;
+                                    break;
+                                }
+                                if (neighborTile.tileType == DFTile.TileType.FLOORROOM || neighborTile.tileType == DFTile.TileType.FLOORCORRIDOR)
+                                {
+                                    hasFloorNeighbor = true;
+                                }
+
+                                if (hasVoidNeighbor && hasFloorNeighbor)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!hasVoidNeighbor && !hasFloorNeighbor)
+                        {
+                            listOfIndexes.Add(new Vector2Int(x, y));
+                        }
+
+                    }
+                }
+            }
+
+            Parallel.For(0, listOfIndexes.Count, i =>
+            {
+                gridArr[listOfIndexes[i].x, listOfIndexes[i].y].tileType = DFTile.TileType.VOID;
+                gridArr[listOfIndexes[i].x, listOfIndexes[i].y].tileWeight = 0;
+            });
+
+        }
         #endregion
 
 
