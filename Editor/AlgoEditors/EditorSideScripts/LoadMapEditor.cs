@@ -172,30 +172,33 @@ namespace DungeonForge.Editor
 
                         break;
                     }
-            
+
 
                 case LoadMapMA.UI_STATE.SELF_EDITING:
                     {
+                        GUILayout.TextArea("Here you can manually change the type of tile at the specific coordinate\n\nUse the buttons to move the red gizmos and choose the type of tile you wish it to be using the buttons below\n\nVOID = White\nWALL = Black\nGREY = Ceiling/Floor");
+
+                        DFEditorUtil.SpacesUILayout(1);
 
                         mainScript.allowedForward = true;
                         mainScript.allowedBack = true;
 
-                        if (GUILayout.Button(new GUIContent() { text = "Left" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Left", tooltip = "Move the gizmos pointer to the left" }))
                         {
                             if (mainScript.pointerPosition.y + 1 < mainScript.pcgManager.gridArr.GetLength(1))
                                 mainScript.pointerPosition = new Vector2Int(mainScript.pointerPosition.x, mainScript.pointerPosition.y + 1);
                         }
-                        if (GUILayout.Button(new GUIContent() { text = "Right" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Right", tooltip = "Move the gizmos pointer to the Right" }))
                         {
                             if (mainScript.pointerPosition.y - 1 >= 0)
                                 mainScript.pointerPosition = new Vector2Int(mainScript.pointerPosition.x, mainScript.pointerPosition.y - 1);
                         }
-                        if (GUILayout.Button(new GUIContent() { text = "Up" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Up", tooltip = "Move the gizmos pointer to the Upwards" }))
                         {
                             if (mainScript.pointerPosition.x - 1 >= 0)
                                 mainScript.pointerPosition = new Vector2Int(mainScript.pointerPosition.x - 1, mainScript.pointerPosition.y);
                         }
-                        if (GUILayout.Button(new GUIContent() { text = "Down" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Down", tooltip = "Move the gizmos pointer to the Downwards" }))
                         {
                             if (mainScript.pointerPosition.x + 1 < mainScript.pcgManager.gridArr.GetLength(0))
                                 mainScript.pointerPosition = new Vector2Int(mainScript.pointerPosition.x + 1, mainScript.pointerPosition.y);
@@ -203,20 +206,20 @@ namespace DungeonForge.Editor
 
                         DFEditorUtil.SpacesUILayout(2);
 
-                        if (GUILayout.Button(new GUIContent() { text = "Void" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Void", tooltip = "Change the current tile type to a VOID/Blank" }))
                         {
                             DFGeneralUtil.ResetTile(mainScript.pcgManager.gridArr[mainScript.pointerPosition.x, mainScript.pointerPosition.y]);
 
                             mainScript.pcgManager.Plane.GetComponent<Renderer>().sharedMaterial.mainTexture = DFGeneralUtil.SetUpTextBiColShade(mainScript.pcgManager.gridArr, 0, 1, true);
                         }
-                        if (GUILayout.Button(new GUIContent() { text = "Wall" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Wall", tooltip = "Change the current tile type to a WALL" }))
                         {
                             mainScript.pcgManager.gridArr[mainScript.pointerPosition.x, mainScript.pointerPosition.y].tileType = DFTile.TileType.WALL;
                             mainScript.pcgManager.gridArr[mainScript.pointerPosition.x, mainScript.pointerPosition.y].tileWeight = 1;
 
                             mainScript.pcgManager.Plane.GetComponent<Renderer>().sharedMaterial.mainTexture = DFGeneralUtil.SetUpTextBiColShade(mainScript.pcgManager.gridArr, 0, 1, true);
                         }
-                        if (GUILayout.Button(new GUIContent() { text = "Floor" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Floor", tooltip = "Change the current tile type to a Floor or ceiling type" }))
                         {
                             mainScript.pcgManager.gridArr[mainScript.pointerPosition.x, mainScript.pointerPosition.y].tileType = DFTile.TileType.FLOORROOM;
                             mainScript.pcgManager.gridArr[mainScript.pointerPosition.x, mainScript.pointerPosition.y].tileWeight = 0.75f;
@@ -239,6 +242,14 @@ namespace DungeonForge.Editor
 
                         DFEditorUtil.SpacesUILayout(2);
 
+
+                        if (selGridGenType == 1)
+                        {
+                            blockGeneration = EditorGUILayout.Toggle(new GUIContent() { text = blockGeneration == true ? "Block generation selected" : "Directional wall generation selected", tooltip = blockGeneration == true ? "Block generation is selected when cubes are used as the assets to build the level" : "Wall directional generation is selected, the dungeon is created based on adjacent tile types, using a single wall asset and adjusting its orientation accordingly" }, blockGeneration);
+                            DFEditorUtil.SpacesUILayout(1);
+                            mainScript.pcgManager.ChunkHeight = (int)EditorGUILayout.Slider(new GUIContent() { text = "This is for the chunk size", tooltip = "" }, mainScript.pcgManager.ChunkHeight, 10, 30);
+                            mainScript.pcgManager.ChunkWidth = mainScript.pcgManager.ChunkHeight;
+                        }
                         if (GUILayout.Button(new GUIContent() { text = "Generate YOUR Dungeon!" }))
                         {
                             while (mainScript.pcgManager.transform.childCount > 0)
@@ -283,14 +294,6 @@ namespace DungeonForge.Editor
                             }
                         }
 
-                        if (selGridGenType == 1)
-                        {
-                            blockGeneration = EditorGUILayout.Toggle(new GUIContent() { text = blockGeneration == true ? "Block gen selected" : "Wall directional gen selected", tooltip = "" }, blockGeneration);
-                            DFEditorUtil.SpacesUILayout(1);
-                            mainScript.pcgManager.ChunkHeight = (int)EditorGUILayout.Slider(new GUIContent() { text = "This is for the chunk size", tooltip = "" }, mainScript.pcgManager.ChunkHeight, 10, 30);
-                            mainScript.pcgManager.ChunkWidth = mainScript.pcgManager.ChunkHeight;
-                        }
-
                         DFEditorUtil.SpacesUILayout(4);
 
                         EditorGUI.BeginDisabledGroup(mainScript.generatedMap == false);
@@ -298,9 +301,9 @@ namespace DungeonForge.Editor
                         keepPercentage = EditorGUILayout.Slider(new GUIContent() { text = "Keep percentage", tooltip = "The chance which the object will spawn" }, keepPercentage, 0f, 1f);
                         radiusPoissant = EditorGUILayout.Slider(new GUIContent() { text = "Radius Poissant", tooltip = "The radii at which each object is disatnced from one another" }, radiusPoissant, 0.5f, 10f);
 
-                        mainScript.heigthPoissant = EditorGUILayout.Slider(new GUIContent() { text = "Poissant Height", tooltip = "The Y height of the generation" }, mainScript.heigthPoissant, 0, 10);
+                        mainScript.heigthPoissant = EditorGUILayout.Slider(new GUIContent() { text = "Poissant Height", tooltip = "The Y height of the generation, use the blue gizmos indicator as a visual aid" }, mainScript.heigthPoissant, 0, 10);
 
-                        if (GUILayout.Button(new GUIContent() { text = "Generate Poissant Objects", tooltip = mainScript.generatedMap == true ? "Generate debires around the map" : "This is disabled due to this option only working for tile generation" }))
+                        if (GUILayout.Button(new GUIContent() { text = "Generate Poissant Objects", tooltip = mainScript.generatedMap == true ? "Generate debires around the map, use the blue gizmos to indicate the height to which generate the assets" : "This is disabled due to this option only working for tile generation" }))
                         {
                             mainScript.DeleteAllGenObjects();
 

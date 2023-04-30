@@ -1,5 +1,3 @@
-
-
 namespace DungeonForge.AlgoScript
 {
     using System.Collections.Generic;
@@ -175,13 +173,14 @@ namespace DungeonForge.AlgoScript
         
         private void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
             if (state == UI_STATE.SELF_EDITING) 
             {
+                Gizmos.color = Color.red;
                 Gizmos.DrawSphere(new Vector3(pointerPosition.x - pcgManager.gridArr.GetLength(0)/2, 0, pointerPosition.y - pcgManager.gridArr.GetLength(1) / 2), 0.5f);
             }
-            else if (state == UI_STATE.GENERATE) 
+            else if (state == UI_STATE.GENERATE && generatedMap)
             {
+                Gizmos.color = Color.blue;
                 Gizmos.DrawSphere(new Vector3(0, heigthPoissant, 0),0.5f);
             }
         }
